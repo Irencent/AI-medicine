@@ -1,0 +1,488 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+First, to create a data frame in R, you can do as straightforward as this:
+
+```{r}
+my_array <- array(1:18, dim = c(2, 9))
+my_df <- as.data.frame(my_array)
+colnames(my_df) <- c("Column1", "Column2", "Column3",
+                     "Column4", "Column5", "Column6",
+                     "Column7", "Column8", "Column9")
+lst <- c("Column1", "Column2", "Column3")
+rownames(my_df) <- c("Row1", "Row2")
+#my_df[,1] <-paste(as.character(my_df[,1]), "(",sprintf("%.2f%%", my_df[,1]), ")")  
+my_df
+my_df[1, "Column9"]
+```
+
+```{r}
+library(DescTools)
+calc_p <- function(name, subtype, dataframe) {
+  intrst_frame <- dataframe[c(name, subtype)]
+  intrst_frame <- intrst_frame[nchar(as.character(intrst_frame[[name]])) > 0, ]
+  intrst_frame[[name]] <- ifelse(intrst_frame[[name]] == '1. Y', "Y", intrst_frame[[name]])
+  intrst_frame[[name]] <- ifelse(intrst_frame[[name]] == '2. N', "N", intrst_frame[[name]])
+
+  if('Y' %in% intrst_frame[[name]]){
+    intrst_frame <- intrst_frame[intrst_frame[[name]] %in% c("Y", "N"), ]
+  }
+  contigtab <- table(intrst_frame)
+  chi_p <- chisq.test(contigtab, simulate.p.value = TRUE)$p.value
+  try_fisher <- try(fisher.test(contigtab, simulate.p.value = TRUE), silent = TRUE)
+  fisher_p <- ifelse(class(try_fisher)=='try-error', -1, fisher.test(contigtab, simulate.p.value = TRUE)$p.value)
+  G_p <- GTest(contigtab, correct = "williams")$p.value
+  return(c(chi_p, fisher_p, G_p))
+}
+
+```
+
+``` r
+
+1/2
+```
+
+```{r}
+#import the data frame
+data <- read.csv('/Users/huyanshen/Desktop/untitled folder/图像特征汇总-2024-Feb-13.csv')
+
+#trim all the values with spaces
+data[] <- lapply(data, function(x) if(is.character(x)) trimws(x) else x)
+
+filtered_data <- subset(data, `Molecular.Subtypes` %in% c('G3', 'G4', 'SHH', 'WNT'))
+
+
+#pick out the columns to be dealt with
+col_list <- c("Fourth.ventricle.Infiltration", "肿瘤边界..Tumor.Margin.", "水肿", "囊肿.坏死.cyst.cavitation.change", "脑积水.手术前.", "脑部.M2.转移")
+
+#organize the first table
+tumor_location <- filtered_data[c("肿瘤位置", "Molecular.Subtypes")]
+tumor_location <- tumor_location[nchar(as.character(tumor_location$"肿瘤位置")) > 0, ]
+contigtab <- table(tumor_location)
+contigtab <- contigtab[,c(4, 3, 1, 2)]
+total <- colSums(contigtab)
+contigtab <- rbind(contigtab, Total = total)
+
+#write the first csv1
+write.csv(contigtab, file = "./result.csv", row.names = TRUE)
+
+#change the cell format into A1(B2%)
+df <- read.csv("./result.csv", row.names = 1)
+df0 = df
+for (i in 1:nrow(df)) {
+  df0[i, ] <- df[i,]/df[nrow(df),] 
+}
+for (l in 1:nrow(df)) {
+    df[l, ] <- paste(as.character(df[l, ]), "(", sprintf("%.2f%%", df0[l, ] * 100), ")")
+}
+
+#rewrite the csv1
+write.csv(df, file="./result.csv")
+df <- read.csv("./result.csv")
+df <- cbind(NewColumn = rep("", nrow(df)), df)
+df[1, 1] <- "Six classes"
+df <- cbind(df, "p-value(chi-square)" = rep("", nrow(df)), 
+            "p-value(Fisher exact)" = rep("", nrow(df)), 
+            "p-value(G-test)" = rep("", nrow(df)) )
+
+result_p <- calc_p("肿瘤位置", "Molecular.Subtypes", filtered_data)
+
+df[1, "p-value(chi-square)"] <- ifelse(result_p[1] >= 0.001, sprintf("%.3f", result_p[1]), "<0.001")
+if (result_p[2] == -1) {
+  df[1, "p-value(Fisher exact)"] = -1
+}else{
+  df[1, "p-value(Fisher exact)"] <- ifelse(result_p[2] >= 0.001, sprintf("%.3f", result_p[2]), "<0.001")
+}
+df[1, "p-value(G-test)"] <- ifelse(result_p[3] >= 0.001, sprintf("%.3f", result_p[1]), "<0.001")
+write.csv(df, file="./result.csv", row.names = FALSE)
+
+#for loop
+for (name in col_list) {
+  intrst_frame <- filtered_data[c(name, "Molecular.Subtypes")]
+  intrst_frame <- intrst_frame[nchar(as.character(intrst_frame[[name]])) > 0, ]
+  intrst_frame[[name]] <- ifelse(intrst_frame[[name]] == '1. Y', "Y", intrst_frame[[name]])
+  intrst_frame[[name]] <- ifelse(intrst_frame[[name]] == '2. N', "N", intrst_frame[[name]])
+
+  if('Y' %in% intrst_frame[[name]]){
+    intrst_frame <- intrst_frame[intrst_frame[[name]] %in% c("Y", "N"), ]
+  }
+  # organize the table
+  contigtab <- table(intrst_frame)
+
+  contigtab <- contigtab[, c(4, 3, 1, 2)]
+  if('Y' %in% intrst_frame[[name]]) {
+    contigtab <- contigtab[c(2, 1),]
+  }
+  total <- colSums(contigtab)
+  contigtab <- rbind(contigtab, Total = total)
+  #write the table into csv2
+  write.csv(contigtab, "./tempt.csv", row.names = TRUE)
+  #read and change the cell format into A1(B2%)
+  df <- read.csv('./tempt.csv', row.names = 1)
+  df0 = df
+  for (j in 1:nrow(df)) {
+    df0[j, ] <- df[j,]/df[nrow(df),] 
+  }
+  for (k in 1:nrow(df)) {
+    df[k, ] <- paste(as.character(df[k, ]), "(", sprintf("%.2f%%", df0[k, ] * 100), ")")
+  }
+  
+  write.csv(df, file="./tempt.csv")
+  df <- read.csv("./tempt.csv")
+  df <- cbind(NewColumn = rep("", nrow(df)), df)
+  df[1, 1] <- name
+  
+  df <- cbind(df, "p-value(chi-square)" = rep("", nrow(df)), 
+            "p-value(Fisher exact)" = rep("", nrow(df)), 
+            "p-value(G-test)" = rep("", nrow(df)) )
+
+  result_p <- calc_p(name, "Molecular.Subtypes", filtered_data)
+
+  df[1, "p-value(chi-square)"] <- ifelse(result_p[1] >= 0.001, sprintf("%.3f", result_p[1]), "<0.001")
+  if (result_p[2] == -1) {
+    df[1, "p-value(Fisher exact)"] = -1
+  }else{
+    df[1, "p-value(Fisher exact)"] <- ifelse(result_p[2] >= 0.001, sprintf("%.3f", result_p[2]), "<0.001")
+  }
+  df[1, "p-value(G-test)"] <- ifelse(result_p[3] >= 0.001, sprintf("%.3f", result_p[1]), "<0.001")
+  
+  # Append csv2 to csv1 without column names
+  write.table(df, file = "./result.csv", append = TRUE, col.names = FALSE, row.names = FALSE, sep = ",", quote = TRUE)
+  
+} 
+
+```
+
+```{r}
+help("read.csv")
+```
+
+# Imaging features-分子亚型
+
+## Data frame with missing values dropped
+
+```{r}
+data <- read.csv('/Users/huyanshen/Desktop/untitled folder/图像特征汇总-2024-Feb-13.csv',)
+
+#trim all the values with spaces
+data[] <- lapply(data, function(x) if(is.character(x)) trimws(x) else x)
+
+print(colnames(data))
+data
+```
+
+## Data filtered by Molecular Subtype
+
+```{r}
+filtered_data <- subset(data, `Molecular.Subtypes` %in% c('G3', 'G4', 'SHH', 'WNT'))
+```
+
+### Tumor location with six classes
+
+```{r}
+tumor_location <- filtered_data[c("肿瘤位置", "Molecular.Subtypes")]
+tumor_location <- tumor_location[nchar(as.character(tumor_location$"肿瘤位置")) > 0, ]
+contigtab_tumor_location <- table(tumor_location)
+contigtab_tumor_location <- contigtab_tumor_location[,c(4, 3, 1, 2)]
+write.csv(contigtab_tumor_location, file = "./result.csv", row.names = TRUE)
+df <- read.csv("./result.csv")
+df
+```
+
+```{r}
+library(DescTools)
+result1 <- chisq.test(contigtab_tumor_location, simulate.p.value = TRUE)
+result2 <- fisher.test(contigtab_tumor_location, simulate.p.value=TRUE)
+result3 <- GTest(contigtab_tumor_location)
+result1
+result2
+result3
+```
+
+### Fourth-ventricle infiltration
+
+```{r}
+inflitration <- filtered_data[c("Fourth.ventricle.Infiltration", "Molecular.Subtypes")]
+inflitration <- inflitration[nchar(as.character(inflitration$"Fourth.ventricle.Infiltration")) > 0, ]
+inflitration$Fourth.ventricle.Infiltration <- ifelse(inflitration$Fourth.ventricle.Infiltration == '1. Y', 'Y', inflitration$Fourth.ventricle.Infiltration)
+inflitration$Fourth.ventricle.Infiltration <- ifelse(inflitration$Fourth.ventricle.Infiltration == '2. N', 'N', inflitration$Fourth.ventricle.Infiltration)
+
+contigtab_inflitration <- table(inflitration)
+contigtab_inflitration <- contigtab_inflitration[,c(4, 3, 1, 2)]
+
+write.csv(contigtab_inflitration, file = "./result.csv", row.names = TRUE)
+df <- read.csv("./result.csv")
+
+result1 <- chisq.test(contigtab_inflitration, simulate.p.value = TRUE)
+#result2 <- fisher.test(contigtab_inflitration) 
+result3 <- GTest(contigtab_inflitration)
+contigtab_inflitration
+result1
+result2
+result3
+df
+contigtab_inflitration
+```
+
+### Tumor Margin
+
+```{r}
+Tumor_Margin <- filtered_data[c("肿瘤边界..Tumor.Margin.", "Molecular.Subtypes")]
+Tumor_Margin <- Tumor_Margin[nchar(as.character(Tumor_Margin$"肿瘤边界..Tumor.Margin.")) > 0, ]
+Tumor_Margin
+```
+
+```{r}
+contigtab_tumor_margin <- table(Tumor_Margin)
+contigtab_tumor_margin <- contigtab_tumor_margin[, c(4, 3, 1, 2)]
+
+write.csv(contigtab_tumor_margin, file = "./result.csv", row.names = TRUE)
+df <- read.csv("./result.csv")
+
+result1 <- fisher.test(contigtab_tumor_margin)
+result2 <- chisq.test(contigtab_tumor_margin)
+contigtab_tumor_margin
+result1
+result2
+df
+```
+
+### Peritumoral edema
+
+```{r}
+peritumoral_edema <- filtered_data[c("水肿", "Molecular.Subtypes")]
+peritumoral_edema <- peritumoral_edema[nchar(as.character(peritumoral_edema$"水肿")) > 0, ]
+contigtab_peritumoral_edema <- table(peritumoral_edema)
+contigtab_peritumoral_edema <- contigtab_peritumoral_edema[, c(4, 3, 1, 2)]
+
+write.csv(contigtab_peritumoral_edema, file = "./result.csv", row.names = TRUE)
+df <- read.csv("./result.csv")
+
+result1 <- chisq.test(contigtab_peritumoral_edema)
+result2 <- fisher.test(contigtab_peritumoral_edema)
+result3 <- GTest(contigtab_peritumoral_edema, correct = "williams")
+contigtab_peritumoral_edema
+result1
+result2
+result3
+df
+```
+
+### Cystic change/necrosis
+
+```{r}
+cystic <- filtered_data[c("囊肿.坏死.cyst.cavitation.change", "Molecular.Subtypes")]
+cystic <- cystic[nchar(as.character(cystic$"囊肿.坏死.cyst.cavitation.change")) > 0, ]
+contigtab_cystic <- table(cystic)
+contigtab_cystic <- contigtab_cystic[,c(4, 3, 1, 2)]
+
+write.csv(contigtab_cystic, file = "./result.csv", row.names = TRUE)
+df <- read.csv("./result.csv")
+
+
+result1 <- chisq.test(contigtab_cystic)
+result2 <- fisher.test(contigtab_cystic)
+result3 <- GTest(contigtab_cystic, correct = "williams")
+contigtab_cystic
+result1
+result2
+result3
+df
+```
+
+### Hydrocephalus_before_Surgery
+
+```{r}
+hydrocephalus <- filtered_data[c("脑积水.手术前.", "Molecular.Subtypes")]
+hydrocephalus <- hydrocephalus[nchar(as.character(hydrocephalus$"脑积水.手术前.")) > 0, ]
+
+hydrocephalus$脑积水.手术前. <- ifelse(hydrocephalus$脑积水.手术前. == '1. Y', 'Y', hydrocephalus$脑积水.手术前.)
+hydrocephalus$脑积水.手术前. <- ifelse(hydrocephalus$脑积水.手术前. == '2. N', 'N', hydrocephalus$脑积水.手术前.)
+
+contigtab_hydrocephalus <- table(hydrocephalus)
+contigtab_hydrocephalus <- contigtab_hydrocephalus[,c(4, 3, 1, 2)]
+
+write.csv(contigtab_hydrocephalus, file = "./result.csv", row.names = TRUE)
+df <- read.csv("./result.csv")
+
+result1 <- chisq.test(contigtab_hydrocephalus)
+#result2 <- fisher.test(contigtab_hydrocephalus)
+result3 <- GTest(contigtab_hydrocephalus, correct = "williams")
+contigtab_hydrocephalus
+#proportion
+result1
+result2
+result3
+df
+```
+
+## M2 dissemination
+
+```{r}
+M2_metas <- filtered_data[c("脑部.M2.转移", "Molecular.Subtypes")]
+M2_metas <- M2_metas[nchar(as.character(M2_metas$"脑部.M2.转移"))>0 ,]
+M2_metas$脑部.M2.转移 <- ifelse(M2_metas$脑部.M2.转移 == '1. Y', 'Y', M2_metas$脑部.M2.转移)
+M2_metas$脑部.M2.转移 <- ifelse(M2_metas$脑部.M2.转移 == '2. N', 'N', M2_metas$脑部.M2.转移)
+M2_metas <- M2_metas[M2_metas$脑部.M2.转移 %in% c("N", "Y" ), ]
+contigtab <- table(M2_metas)
+contigtab <- contigtab[,c(4, 3, 1, 2)]
+
+write.csv(contigtab, file = "./result.csv", row.names = TRUE)
+df <- read.csv("./result.csv")
+
+result1 <- chisq.test(contigtab)
+result2 <- fisher.test(contigtab)
+result3 <- GTest(contigtab, correct = "williams")
+contigtab
+#proportion
+result1
+result2
+result3
+df
+```
+
+# Imaging features-SHH TP53
+
+## Data selected by genetic mutations
+
+```{r}
+selected_data <- subset(data, `Genetic.Mutations` %in% c("TP53+", "TP53-"))
+selected_data <- subset(selected_data, `Molecular.Subtypes` %in% c("SHH"))
+selected_data
+```
+
+### Tumor location with six classes
+
+```{r}
+tumor_location <- selected_data[c("肿瘤位置", "Genetic.Mutations")]
+tumor_location <- tumor_location[nchar(as.character(tumor_location$"肿瘤位置")) > 0, ]
+contigtab_tumor_location <- table(tumor_location)
+result1 <- chisq.test(contigtab_tumor_location)
+result1_1 <- chisq.test(contigtab_tumor_location, simulate.p.value = TRUE)
+result2 <- fisher.test(contigtab_tumor_location)
+write.csv(contigtab_tumor_location, file = "my_contingency_table.csv", row.names = FALSE)
+contigtab_tumor_location
+result1
+result2
+result1_1
+```
+
+The result of the chi-square test is probably incorrect, so we can try another test: G-test of independence:
+
+```{r}
+#first to install the package
+install.packages("DescTools")
+```
+
+```{r}
+# then import the library and calculate
+
+library(DescTools)
+
+result3 <- GTest(contigtab_tumor_location, correct = "williams")
+result3
+```
+
+### Fourth-ventricle infiltration
+
+```{r}
+inflitration <- selected_data[c("Fourth.ventricle.Infiltration", "Genetic.Mutations")]
+inflitration <- inflitration[nchar(as.character(inflitration$"Fourth.ventricle.Infiltration")) > 0, ]
+contigtab_inflitration <- table(inflitration)
+contigtab_inflitration <- contigtab_inflitration[,c(2,1)]
+print(contigtab_inflitration)
+result1 <- chisq.test(contigtab_inflitration)
+result2 <- fisher.test(contigtab_inflitration) 
+result3 <- GTest(contigtab_inflitration, correct = "williams")
+result1
+result2
+result3
+write.csv(contigtab_inflitration, file = "my_contingency_table.csv", row.names = FALSE)
+```
+
+### Tumor Margin
+
+```{r}
+Tumor_Margin <- selected_data[c("肿瘤边界..Tumor.Margin.", "Genetic.Mutations")]
+Tumor_Margin <- Tumor_Margin[nchar(as.character(Tumor_Margin$"肿瘤边界..Tumor.Margin.")) > 0, ]
+contigtab_tumor_margin <- table(Tumor_Margin)
+contigtab_tumor_margin <- contigtab_tumor_margin[,c(2,1)]
+result1 <- chisq.test(contigtab_tumor_margin)
+result2 <- fisher.test(contigtab_tumor_margin)
+result3 <- GTest(contigtab_tumor_margin, correct = "williams")
+contigtab_tumor_margin
+result1
+result2
+result3
+write.csv(contigtab_tumor_margin, file = "my_contingency_table.csv", row.names = FALSE)
+```
+
+### Peritumoral edema
+
+```{r}
+peritumoral_edema <- selected_data[c("水肿", "Genetic.Mutations")]
+peritumoral_edema <- peritumoral_edema[nchar(as.character(peritumoral_edema$"水肿")) > 0, ]
+contigtab_peritumoral_edema <- table(peritumoral_edema)
+contigtab_peritumoral_edema <- contigtab_peritumoral_edema[,c(2,1)]
+result1 <- chisq.test(contigtab_peritumoral_edema)
+result2 <- fisher.test(contigtab_peritumoral_edema)
+result3 <- GTest(contigtab_peritumoral_edema)
+contigtab_peritumoral_edema
+result1
+result2
+result3
+write.csv(contigtab_peritumoral_edema, file = "my_contingency_table.csv", row.names = FALSE)
+```
+
+### Cystic change/necrosis
+
+```{r}
+cystic <- selected_data[c("囊肿.坏死.cyst.cavitation.change", "Genetic.Mutations")]
+cystic <- cystic[nchar(as.character(cystic$"囊肿.坏死.cyst.cavitation.change")) > 0, ]
+contigtab_cystic <- table(cystic)
+
+result1 <- chisq.test(contigtab_cystic)
+result2 <- fisher.test(contigtab_cystic)
+result3 <- GTest(contigtab_cystic)
+contigtab_cystic
+result1
+result2
+result3
+```
+
+### Hydrocephalus_before_Surgery
+
+```{r}
+hydrocephalus <- selected_data[c("脑积水.手术前.", "Genetic.Mutations")]
+hydrocephalus <- hydrocephalus[nchar(as.character(hydrocephalus$"脑积水.手术前.")) > 0, ]
+contigtab_hydrocephalus <- table(hydrocephalus)
+result1 <- chisq.test(contigtab_hydrocephalus)
+result2 <- fisher.test(contigtab_hydrocephalus)
+result3 <- GTest(contigtab_hydrocephalus)
+contigtab_hydrocephalus
+result1
+result2
+result3
+```
+
+## M2 dissemination
+
+```{r}
+M2_metas <- selected_data[c("脑部.M2.转移", "Genetic.Mutations")]
+M2_metas <- M2_metas[nchar(as.character(M2_metas$"脑部.M2.转移"))>0 ,]
+M2_metas$脑部.M2.转移 <- ifelse(M2_metas$脑部.M2.转移 == '1. Y', 'Y', M2_metas$脑部.M2.转移)
+M2_metas$脑部.M2.转移 <- ifelse(M2_metas$脑部.M2.转移 == '2. N', 'N', M2_metas$脑部.M2.转移)
+M2_metas <- M2_metas[M2_metas$脑部.M2.转移 %in% c("N", "Y" ), ]
+contigtab <- table(M2_metas)
+#contigtab <- contigtab[,c(1, 2)]
+result1 <- chisq.test(contigtab)
+result2 <- fisher.test(contigtab)
+result3 <- GTest(contigtab, correct = "williams")
+contigtab
+#proportion
+result1
+result2
+result3
+```

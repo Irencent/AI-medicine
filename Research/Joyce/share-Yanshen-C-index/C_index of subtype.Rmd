@@ -1,0 +1,200 @@
+---
+title: "C_index of subtype"
+author: "C.C."
+date: "`r Sys.Date()`"
+output:
+  prettydoc::html_pretty:
+    toc: true
+    theme: architect
+    highlight: github
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## load the data
+
+```{r}
+subtype <- read.csv("data/alldata_Nov14.csv", na.strings = "")
+subtype = subtype[, c("Number", "MolecularSubtypes")]
+colnames(subtype) = c("Number", "subtype")
+idx.na <- apply(is.na(subtype), 1, any)
+subtype = subtype[!idx.na, ]
+subtype = subtype[subtype$subtype != "NOS" & subtype$subtype != "NS" & subtype$subtype != "空白" & subtype$subtype != "提取RNA失败" & subtype$subtype != "无蜡卷", ]
+
+# decide the label of the patients who has more than one label
+# using the criterion by the degree of prognosis: G3 < G4 < SHH < WNT
+for(i in 1:nrow(subtype)){
+  if(subtype[i, "subtype"] == "G3/SHH/WNT" | subtype[i, "subtype"] == "G4/G3" | subtype[i, "subtype"] == "G3/G4" | subtype[i, "subtype"] == "G3/SHH/G4"){
+    subtype[i, "subtype"] = "G3"
+  }else if(subtype[i, "subtype"] == "SHH/WNT" | subtype[i, "subtype"] == "SHH/"){
+    subtype[i, "subtype"] = "SHH"
+  }
+}
+subtype$subtype = as.factor(subtype$subtype)
+summary(subtype$subtype)
+
+OSinfor <- read.csv("data/OSinfor.csv", na.strings = "")
+
+data <- merge(subtype, OSinfor, by = "Number")
+cat("Totally", nrow(data), "of patients we can use to analyse.")
+```
+
+## C index
+
+```{r}
+library(survC1)
+df <- read.csv("./Medulloblastoma-molecular-subtypes.csv", stringsAsFactors=FALSE, na.strings = "" )
+data1 <- data.frame(df$mol_sub_2, df$mortality, df$OS_nomissing_adjusted)
+colnames(data1) <- c("subtype", "censored", "OS")
+data1 <- na.omit(data1, subset = 'subtype')
+data1
+N = 1000
+C_index = rep(0, N)
+n = nrow(data1)
+for (i in 1:N){
+  if(i %% 100 == 0) cat(i, "times of trying...\n")
+  # redevide the train and test data in each epoch
+  set.seed(i)
+  index.training=sample(n, 0.8 * n, F)
+  index.testing=(1:n)[-index.training]
+  
+  res.cox <- coxph(Surv(OS, censored) ~ relevel(factor(subtype), ref = "G3"), data = data1[index.training, ])
+  # test on the test_data
+  marker <- as.vector(predict(res.cox, data1[index.testing, ], type = 'lp'))
+  
+  # tau = max(data1$OS[index.testing])
+  tau=quantile(data1$OS[index.testing], 0.95)
+  D=cbind(data1$OS[index.testing], data1$censored[index.testing], marker)
+  C_index[i] = Inf.Cval(D, tau, itr=200)$Dhat
+}
+print(C_index[1:10])
+cat("The mean of C index in", N, "epochs =", mean(C_index))
+# The mean of C index in 10000 epochs = 0.5935335
+```
+
+```{r}
+library(survC1)
+df <- read.csv("/Users/huyanshen/Desktop/share-Yanshen-C-index/Medulloblastoma-molecular-subtypes.csv", stringsAsFactors=FALSE, na.strings = "" )
+data1 <- data.frame(df$mol_sub_2, df$mortality, df$OS_nomissing_adjusted)
+colnames(data1) <- c("subtype", "censored", "OS")
+data1 <- na.omit(data1, subset = 'subtype')
+data1
+N = 1000
+C_index = rep(0, N)
+n = nrow(data1)
+for (i in 1:N){
+  if(i %% 100 == 0) cat(i, "times of trying...\n")
+  # redevide the train and test data in each epoch
+  set.seed(i)
+  index.training=sample(n, 0.8 * n, F)
+  index.testing=(1:n)[-index.training]
+  
+  res.cox <- coxph(Surv(OS, censored) ~ relevel(factor(subtype), ref = "G4"), data = data1[index.training, ])
+  # test on the test_data
+  marker <- as.vector(predict(res.cox, data1[index.testing, ], type = 'lp'))
+  
+  # tau = max(data1$OS[index.testing])
+  tau=quantile(data1$OS[index.testing], 0.95)
+  D=cbind(data1$OS[index.testing], data1$censored[index.testing], marker)
+  C_index[i] = Inf.Cval(D, tau, itr=200)$Dhat
+}
+print(C_index[1:10])
+cat("The mean of C index in", N, "epochs =", mean(C_index))
+# The mean of C index in 10000 epochs = 0.5935335
+```
+
+```{r}
+library(survC1)
+df <- read.csv("/Users/huyanshen/Desktop/risk_score_final_new.csv")
+data1 <- data.frame(df$Subtypes, df$censored, df$OS)
+colnames(data1) <- c("subtype", "censored", "OS")
+data1 <- data1 %>% mutate(censored = ifelse(censored == 0, 1, 0))
+N = 1000
+C_index = rep(0, N)
+n = nrow(data1)
+for (i in 1:N){
+  if(i %% 100 == 0) cat(i, "times of trying...\n")
+  # redevide the train and test data in each epoch
+  set.seed(i)
+  index.training=sample(n, 0.6 * n, F)
+  index.testing=(1:n)[-index.training]
+  
+  res.cox <- coxph(Surv(OS, censored) ~ subtype, data = data1[index.training, ])
+  # test on the test_data
+  marker <- as.vector(predict(res.cox, data1[index.testing, ], type = 'lp'))
+  
+  # tau = max(data1$OS[index.testing])
+  tau=quantile(data1$OS[index.testing], 0.95)
+  D=cbind(data1$OS[index.testing], data1$censored[index.testing], marker)
+  C_index[i] = Inf.Cval(D, tau, itr=200)$Dhat
+}
+
+```
+
+```{r}
+print(C_index[1:10])
+
+cat("The mean of C index in", N, "epochs =", mean(C_index))
+
+```
+
+```{r}
+sorted_C_index <- sort(C_index)
+lower <- quantile(sorted_C_index, 0.025)
+upper <- quantile(sorted_C_index, 0.975)
+lower
+upper
+```
+
+```{r}
+help("surv_fit")
+```
+
+```{r}
+library(survC1)
+df <- read.csv("/Users/huyanshen/Desktop/risk_score_final_new.csv")
+data1 <- data.frame(df$Subtypes, df$censored, df$OS)
+colnames(data1) <- c("subtype", "censored", "OS")
+data1 <- data1 %>% mutate(censored = ifelse(censored == 0, 1, 0))
+N = 1000
+C_index = rep(0, N)
+n = nrow(data1)
+for (i in 1:N){
+  if(i %% 100 == 0) cat(i, "times of trying...\n")
+  # redevide the train and test data in each epoch
+  set.seed(i)
+  index.training=sample(n, 0.9 * n, F)
+  index.testing=(1:n)[-index.training]
+  
+  res.cox <- coxph(Surv(OS, censored) ~ subtype, data = data1[index.training, ])
+  # test on the test_data
+  marker <- as.vector(predict(res.cox, data1[index.testing, ], type = 'lp'))
+  
+  # tau = max(data1$OS[index.testing])
+  tau=quantile(data1$OS[index.testing], 0.95)
+  D=cbind(data1$OS[index.testing], data1$censored[index.testing], marker)
+  C_index[i] = Inf.Cval(D, tau, itr=200)$Dhat
+}
+```
+
+```{r}
+sorted_C_index <- sort(C_index)
+lower <- quantile(sorted_C_index, 0.025)
+upper <- quantile(sorted_C_index, 0.975)
+lower
+upper
+```
+
+```{r}
+library(Hmisc)
+risk_score1 <- df$risk_score_by_radiomics_humanmr
+risk_score2 <- df$risk_score_by_subtypes_radiomics_humanmr
+# Calculate the C-index (concordance index)
+c_index <- rcorr.cens(risk_score1, risk_score2)
+
+# Extract the C-index value
+c_index
+
+```

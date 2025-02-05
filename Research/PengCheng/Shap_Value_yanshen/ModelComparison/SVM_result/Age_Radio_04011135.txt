@@ -1,0 +1,41 @@
+-------------Features---------------
+['Cohort', 'Subtypes_three', 'fold', 'Age', 'T1E_log-sigma-3-mm-3D_gldm_LargeDependenceHighGrayLevelEmphasis_x', 'T1E_log-sigma-3-mm-3D_glcm_Autocorrelation_x', 'T1E_log-sigma-1-mm-3D_glcm_ClusterShade_x', 'T1E_wavelet-LHL_firstorder_Mean_x', 'T2_wavelet-LLH_glcm_ClusterShade_y', 'T1E_log-sigma-5-mm-3D_glrlm_LowGrayLevelRunEmphasis_x', 'T1E_wavelet-HLL_firstorder_Median_x', 'T1E_wavelet-LHL_firstorder_Median_x', 'T2_wavelet-HHL_firstorder_Skewness_x', 'T1E_log-sigma-3-mm-3D_glrlm_LongRunLowGrayLevelEmphasis_x', 'T1E_lbp-2D_glrlm_RunLengthNonUniformity_x', 'T2_log-sigma-1-mm-3D_gldm_LowGrayLevelEmphasis_x', 'T1E_log-sigma-5-mm-3D_firstorder_90Percentile_x', 'T1E_log-sigma-3-mm-3D_glszm_LowGrayLevelZoneEmphasis_x', 'T2_wavelet-HHL_glcm_SumSquares_x', 'T2_wavelet-HHL_glrlm_GrayLevelNonUniformityNormalized_x', 'T2_wavelet-LLH_gldm_DependenceNonUniformity_x', 'T2_original_shape_Maximum3DDiameter_y', 'T2_original_glszm_LargeAreaEmphasis_y']
+-------------Testing----------------
+All_test_folds:  (514, 3)
+Test Accuracy: 0.6615 (0.6206, 0.7004)
+Test AUC : 0.8062 (0.7726, 0.8383)
+Test AUC:  ['0.7815 (0.7154, 0.8397)', '0.7875 (0.7282, 0.8432)', '0.8562 (0.8032, 0.9015)'] (per fold)
+Test AUC :  ['0.8697 (0.8196, 0.9143)', '0.7701 (0.7269, 0.8088)', '0.7788 (0.7311, 0.8222)'] (per subtype, [WNT, G3/G4, SHH])
+Test F1 score: 0.6496 (0.609, 0.6906)
+Test F1 score:  ['0.6408 (0.5681, 0.7112)', '0.6337 (0.561, 0.7051)', '0.7239 (0.6527, 0.7886)'] (per fold)
+Test F1 score:  ['0.557 (0.4571, 0.6479)', '0.7158 (0.6715, 0.756)', '0.5533 (0.4842, 0.6174)'] (per subtype, [WNT, G3/G4, SHH])
+Test Confusion Matrix: 
+[[ 44  14   9]
+ [ 35 204  64]
+ [ 12  49  83]]
+-----------Validation--------------
+All_val_folds:  (3, 135, 3)
+All_mean_val_folds: (135, 3)
+Validation AUC :  0.79
+Validation AUC :  [0.832  0.7839 0.7542] (per subtype, [WNT, G3/G4, SHH])
+Validation f1 score:  0.6769
+Validation f1 score:  [0.5143, 0.7564, 0.5823] (per subtype, [WNT, G3/G4, SHH])
+Validation Confusion Matrix: 
+[[ 9  5  3]
+ [ 6 59 15]
+ [ 3 12 23]]
+-----------Golden--------------
+All_new_folds:  (3, 44, 3)
+All_mean_new_folds: (44, 3)
+Golden AUC :  0.8542
+Golden AUC :  [0.7954 0.8485 0.9188] (per subtype, [WNT, G3/G4, SHH])
+Golden f1 score:  0.6701
+Golden f1 score:  [0.1667, 0.807, 0.4211] (per subtype, [WNT, G3/G4, SHH])
+Golden Confusion Matrix: 
+[[ 1  1  5]
+ [ 4 23  6]
+ [ 0  0  4]]
+-------------Params-----------------
+{'C': 2.7245893870569944}
+{'C': 2.1594615881240777}
+{'C': 1.0684258931800605}

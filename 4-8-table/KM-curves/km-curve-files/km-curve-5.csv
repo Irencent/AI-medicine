@@ -1,0 +1,129 @@
+ID,MRI-complete label (T1E&T2),Exclusion-list,CohortID,Geographical Location,Race,Date of Surgery,Age,Sex,Hospital,Molecular Subtypes,Genetic Mutations,Histological Subtypes,Hydrocephalus before Surgery,Tumor Texture,Fourth-ventricle Infiltration,Survival Status,OS (months),OS-impute (months),Nanostring,Recurrence-label_raw,DFS (month)-raw,DFS-impute (months),Radiotherapy,Chemotherapy,TumorResection,ID,转移情况/脊髓,后遗症,其他备注,Nanostring
+488311,Y,,cohort1,East Asia,Asian,22-Jan-16,13,F,Tiantan,WNT,,Classic,Y,Soft,Y,0,71,71,NanoString,N,71,71,Y,N,NTR,488311,,,,NanoString
+493171,Y,,cohort1,East Asia,Asian,16-Mar-16,9,F,Tiantan,WNT,,Classic,Y,Soft,Y,0,69,69,NanoString,N,69,69,Y,N,GTR,493171,,,,NanoString
+493521,Y,,cohort1,East Asia,Asian,22-Mar-16,6,F,Tiantan,WNT,,Classic,Y,Soft,Y,0,69,69,NanoString,N,69,69,Y,N,NTR,493521,,,,NanoString
+503931,Y,,cohort1,East Asia,Asian,20-Mar-17,14,F,Tiantan,WNT,,Classic,N,Soft,Y,1,41,41,NanoString,Y,32,32,N,N,NTR,503931,,,,NanoString
+505000,Y,,cohort1,East Asia,Asian,5-Aug-16,8,F,Tiantan,WNT,,DN,N,Soft,N,0,60,60,NanoString,N,60,60,Y,Y,NTR,505000,,,,NanoString
+510890,Y,,cohort1,East Asia,Asian,20-Oct-16,5,F,Tiantan,WNT,,Classic,Y,Soft,Y,0,58,58,NanoString,N,58,58,Y,Y,NTR,510890,,,,NanoString
+512888,Y,,cohort1,East Asia,Asian,24-Nov-16,15,F,Tiantan,WNT,,Classic,Y,Soft,Y,0,57,57,NanoString,Y,25,25,Y,N,NTR,512888,,,,NanoString
+513135,Y,,cohort1,East Asia,Asian,30-Nov-16,2,F,Tiantan,WNT,,MBEN,Y,Hard,N,1,18,18,,Y,2,2,Y,Y,GTR,513135,,,,
+515113,Y,,cohort1,East Asia,Asian,2-Dec-16,8,M,Tiantan,WNT,,Classic,Y,Soft,Y,0,56,56,,N,56,56,Y,Y,NTR,515113,,,,
+515384,Y,,cohort1,East Asia,Asian,12-Dec-16,7,F,Tiantan,WNT,,Classic,N,Soft,Y,0,56,56,NanoString,N,56,56,Y,Y,NTR,515384,,,,NanoString
+515677,Y,,cohort1,East Asia,Asian,9-Dec-16,25,M,Tiantan,WNT,,Classic,Y,Soft,N,0,60,60,NanoString,N,60,60,Y,Y,NTR,515677,,,,NanoString
+518975,Y,,cohort1,East Asia,Asian,20-Jan-17,3,M,Tiantan,WNT,,Classic,Y,Soft,Y,0,59,59,,N,59,59,Y,Y,NTR,518975,,,,
+521806,Y,,cohort1,East Asia,Asian,20-Feb-17,12,M,Tiantan,WNT,,MBEN,Y,Mixed,Y,0,58,58,,N,58,58,Y,Y,NTR,521806,,,,
+525620,Y,,cohort1,East Asia,Asian,29-Mar-17,12,F,Tiantan,WNT,,Classic,N,Mixed,Y,0,57,57,NanoString,N,57,57,Y,Y,NTR,525620,,,,NanoString
+528284,Y,,cohort1,East Asia,Asian,25-Apr-17,1,M,Tiantan,WNT,,,N,Mixed,Y,0,56,56,NanoString,N,56,56,N,N,GTR,528284,,,,NanoString
+530983,Y,,cohort1,East Asia,Asian,17-May-17,10,F,Tiantan,WNT,,Classic,Y,Soft,Y,0,51,51,NanoString,N,51,51,Y,Y,NTR,530983,,,,NanoString
+532084,Y,,cohort1,East Asia,Asian,12-Jun-17,8,F,Tiantan,WNT,,Classic,Y,Soft,Y,0,50,50,,N,50,50,Y,Y,NTR,532084,,,,
+533195,Y,,cohort1,East Asia,Asian,2-Jun-17,8,F,Tiantan,WNT,,Classic,Y,Soft,Y,0,50,50,,N,50,50,Y,Y,GTR,533195,,,,
+537627,,,cohort1,East Asia,Asian,19-Jul-17,12,M,Tiantan,WNT,,Classic,Y,Soft,Y,0,49,49,NanoString,N,49,49,Y,Y,GTR,537627,,,,NanoString
+537871,Y,,cohort1,East Asia,Asian,20-Jul-17,12,F,Tiantan,WNT,,Classic,N,Soft,Y,0,54,54,NanoString,N,,54,Y,N,GTR,537871,N,反应慢,无脊髓播散，没做过脊髓核磁，,NanoString
+540072,Y,,cohort1,East Asia,Asian,16-Aug-17,10,F,Tiantan,WNT,,Classic,N,Soft,Y,0,55,55,NanoString,,,52.2,Y,Y,GTR,540072,,,,NanoString
+541898,Y,,cohort1,East Asia,Asian,31-Aug-17,10,F,Tiantan,WNT,,Classic,Y,Soft,Y,0,52,52,,N,52,52,Y,Y,GTR,541898,,,,
+558039,Y,,cohort1,East Asia,Asian,9-Feb-18,11,F,Tiantan,WNT,,Classic,N,Soft,Y,0,42,42,,N,42,42,Y,Y,GTR,558039,,,,
+559717,Y,,cohort1,East Asia,Asian,9-Mar-18,9,M,Tiantan,WNT,,Classic,Y,Soft,Y,0,45,45,,N,45,45,Y,Y,NTR,559717,,,,
+560015,Y,,cohort1,East Asia,Asian,12-Mar-18,10,F,Tiantan,WNT,,Classic,Y,Soft,Y,0,45,45,NanoString,N,45,45,Y,Y,NTR,560015,,,,NanoString
+567679,Y,,cohort1,East Asia,Asian,28-May-18,22,F,Tiantan,WNT,,Classic,N,Soft,Y,0,44,44,NanoString,Y,<44,23,Y,Y,GTR,567679,,,,NanoString
+567804,Y,,cohort1,East Asia,Asian,31-May-18,10,M,Tiantan,WNT,,Classic,N,Soft,Y,0,45,45,NanoString,N,,45,Y,Y,GTR,567804,N,,无脊髓播散，做过脊髓核磁，,NanoString
+569744,,,cohort1,East Asia,Asian,20-Jun-18,6,F,Tiantan,WNT,,Classic,Y,Soft,Y,0,38,38,,N,38,38,Y,Y,GTR,569744,,,,
+570208,Y,,cohort1,East Asia,Asian,22-Jun-18,19,M,Tiantan,WNT,,Classic,Y,Soft,Y,0,42,42,NanoString,N,42,42,,,GTR,570208,,,,NanoString
+571058,Y,,cohort1,East Asia,Asian,4-Jul-18,26,M,Tiantan,WNT,,Classic,N,Hard,Y,0,39,39,,N,39,39,Y,Y,GTR,571058,,,,
+579968,Y,,cohort1,East Asia,Asian,9-Nov-18,8,M,Tiantan,WNT,,Classic,N,Soft,Y,0,37,37,NanoString,N,37,37,Y,Y,NTR,579968,,,,NanoString
+581054,Y,,cohort1,East Asia,Asian,15-Nov-18,9,M,Tiantan,WNT,,Classic,Y,Soft,Y,0,37,37,NanoString,N,37,37,Y,Y,GTR,581054,,,,NanoString
+586303,Y,,cohort1,East Asia,Asian,27-Dec-18,12,F,Tiantan,WNT,,Classic,Y,Soft,Y,0,33,33,,N,33,33,Y,Y,GTR,586303,,,,
+586779,Y,,cohort1,East Asia,Asian,8-Jan-19,9,M,Tiantan,WNT,,Classic,N,Soft,Y,0,31,31,,N,31,31,Y,Y,GTR,586779,,,,
+587594,Y,,cohort1,East Asia,Asian,9-Jan-19,10,F,Tiantan,WNT,,Classic,Y,,Y,1,18,18,NanoString,,,1,,,STR,587594,Y,,,NanoString
+591482,Y,,cohort1,East Asia,Asian,21-Feb-19,23,M,Tiantan,WNT,,,N,Soft,N,0,34,34,,N,34,34,Y,Y,STR,591482,,,,
+594415,Y,,cohort1,East Asia,Asian,2-Apr-19,12,M,Tiantan,WNT,,Classic,Y,Soft,Y,0,35,35,,,,32,Y,Y,GTR,594415,,,,
+595891,Y,,cohort1,East Asia,Asian,9-Apr-19,13,F,Tiantan,WNT,,Classic,Y,Soft,Y,0,32,32,,N,32,32,Y,Y,NTR,595891,,,,
+605923,Y,Y,cohort1,East Asia,Asian,12-Jun-19,5,F,Tiantan,WNT,,Classic,N,Soft,Y,1,<32,4,NanoString,,,4,,,GTR,605923,,,,NanoString
+608594,Y,,cohort1,East Asia,Asian,11-Jul-19,9,M,Tiantan,WNT,,Classic,Y,Soft,Y,0,25,25,,N,25,25,Y,Y,GTR,608594,,,,
+609110,,,cohort1,East Asia,Asian,3-Jul-19,12,F,Tiantan,WNT,,DN,Y,Soft,Y,0,32,32,,N,,32,Y,Y,GTR,609110,N,走路不稳,无脊髓播散，做过脊髓核磁，,
+612534,Y,,cohort1,East Asia,Asian,27-Aug-19,7,F,Tiantan,WNT,,Classic,Y,Soft,Y,0,24,24,,Y,20,20,Y,N,GTR,612534,Y,,,
+613983,Y,,cohort1,East Asia,Asian,19-Aug-19,8,F,Tiantan,WNT,,Classic,Y,Mixed,Y,0,28,28,,Y,28,28,,,NTR,613983,,,未拨通,
+618991,Y,,cohort1,East Asia,Asian,12-Sep-19,6,M,Tiantan,WNT,,Classic,Y,Soft,Y,0,27,27,,N,27,27,Y,Y,GTR,618991,,,,
+619572,Y,,cohort1,East Asia,Asian,17-Sep-19,8,F,Tiantan,WNT,,Classic,N,Soft,N,0,36,36,,,,25,,,NTR,619572,,,,
+621777,Y,,cohort1,East Asia,Asian,14-Oct-19,6,M,Tiantan,WNT,,Classic,Y,Soft,Y,0,22,22,,N,22,22,Y,Y,GTR,621777,,,,
+643292,Y,,cohort1,East Asia,Asian,21-May-20,11,M,Tiantan,WNT,,Classic,N,Soft,Y,0,19,19,NanoString,N,19,19,Y,Y,GTR,643292,N,平衡感差，说话不清晰,无脊髓播散，做过脊髓核磁，,NanoString
+643681,Y,,cohort1,East Asia,Asian,21-May-20,14,F,Tiantan,WNT,,Classic,N,Soft,Y,0,15,15,,N,15,15,Y,Y,GTR,643681,,,,
+644228,Y,,cohort1,East Asia,Asian,27-May-20,6,F,Tiantan,WNT,,Classic,Y,Hard,Y,0,15,15,,N,15,15,Y,Y,NTR,644228,,,,
+652853,Y,,cohort1,East Asia,Asian,8-Sep-20,8,M,Tiantan,WNT,,MBEN,Y,Hard,Y,0,11,11,,N,11,11,Y,Y,GTR,652853,,,,
+656014,Y,Y,cohort1,East Asia,Asian,24-Sep-20,10,F,Tiantan,WNT,,Classic,Y,Soft,Y,0,15,15,,N,15,15,Y,Y,GTR,656014,,,,
+663076,Y,,cohort1,East Asia,Asian,7-Dec-20,6,F,Tiantan,WNT,,Classic,Y,Soft,Y,0,8,8,,N,8,8,Y,Y,NTR,663076,,,,
+666560,Y,,cohort1,East Asia,Asian,15-Dec-20,16,M,Tiantan,WNT,,Classic,Y,Soft,Y,0,9,9,,N,9,9,Y,Y,GTR,666560,,,,
+666742,Y,,cohort1,East Asia,Asian,15-Dec-20,5,F,Tiantan,WNT,,Classic,Y,Soft,Y,0,9,9,,N,9,9,Y,Y,NTR,666742,,,,
+668624,Y,,cohort1,East Asia,Asian,30-Dec-20,12,F,Tiantan,WNT,,Classic,N,Soft,Y,0,13,13,,N,,13,Y,Y,NTR,668624,,无法行走,,
+674376,Y,,cohort1,East Asia,Asian,1-Mar-21,15,M,Tiantan,WNT,,Classic,N,Mixed,Y,0,12,12,NanoString,N,,12,Y,Y,NTR,674376,,无法行走,,NanoString
+683059,,,cohort1,East Asia,Asian,28-Apr-21,7,F,Tiantan,WNT,,Classic,Y,Soft,Y,0,8,8,,N,8,8,Y,Y,NTR,683059,,面瘫下肢无力,,
+683639,Y,,cohort1,East Asia,Asian,30-Apr-21,15,F,Tiantan,WNT,,Classic,N,Soft,Y,0,8,8,,N,8,8,Y,Y,NTR,683639,,,,
+685276,Y,,cohort1,East Asia,Asian,13-May-21,8,F,Tiantan,WNT,,LCA,Y,Soft,Y,0,7,7,,N,7,7,Y,Y,NTR,685276,,,,
+689359,Y,,cohort1,East Asia,Asian,16-Jun-21,12,M,Tiantan,WNT,,Classic,Y,Soft,Y,0,6,6,NanoString,N,6,6,Y,N,NTR,689359,,,,NanoString
+692835,Y,,cohort1,East Asia,Asian,1-Jul-21,17,F,Tiantan,WNT,,Classic,N,Soft,Y,0,5,5,,N,5,5,Y,Y,GTR,692835,N,（走路不稳）,,
+693593,Y,,cohort1,East Asia,Asian,7-Jul-21,20,F,Tiantan,WNT,,Classic,Y,Hard,N,0,5,5,,N,5,5,Y,Y,GTR,693593,,,,
+697128,Y,,cohort1,East Asia,Asian,29-Jul-21,16,F,Tiantan,WNT,,Classic,Y,Soft,Y,0,5,5,,N,5,5,Y,Y,GTR,697128,,,,
+702645,Y,,cohort1,East Asia,Asian,1-Sep-21,8,M,Tiantan,WNT,,Classic,Y,Hard,Y,0,13,13,,N,13,13,Y,Y,NTR,702645,,,,
+707128,Y,Y,cohort1,East Asia,Asian,29-Sep-21,11,M,Tiantan,WNT,,Classic,Y,Mixed,Y,0,13,13,,N,13,13,Y,Y,NTR,707128,,,,
+709416,Y,,cohort1,East Asia,Asian,19-Oct-21,6,M,Tiantan,WNT,,Classic,Y,Soft,Y,0,12,12,,N,12,12,Y,Y,NTR,709416,,,,
+710195,Y,,cohort1,East Asia,Asian,22-Oct-21,9,M,Tiantan,WNT,,Classic,Y,Soft,Y,0,12,12,,N,12,12,Y,Y,NTR,710195,,,,
+716485,,,cohort1,East Asia,Asian,6-Dec-21,4,M,Tiantan,WNT,,Classic,Y,Soft,Y,0,10,10,,N,10,10,Y,Y,NTR,716485,,,,
+719870,Y,,cohort1,East Asia,Asian,28-Dec-21,7,M,Tiantan,WNT,,Classic,Y,Mixed,Y,0,10,10,NanoString,N,10,10,Y,Y,GTR,719870,,,,NanoString
+721409,Y,,cohort1,East Asia,Asian,13-Jan-22,13,F,Tiantan,WNT,,Classic,Y,Soft,N,0,9,9,,N,9,9,Y,Y,GTR,721409,,,,
+722534,Y,,cohort1,East Asia,Asian,14-Jan-22,10,M,Tiantan,WNT,,Classic,Y,Soft,Y,0,9,9,,N,9,9,Y,Y,GTR,722534,,,,
+730709,Y,,cohort1,East Asia,Asian,22-Mar-22,7,F,Tiantan,WNT,,Classic,Y,Soft,Y,0,7,7,NanoString,N,7,7,Y,Y,NTR,730709,,,,NanoString
+741991,Y,,cohort1,East Asia,Asian,21-Jun-22,8,F,Tiantan,WNT,,Classic,Y,Soft,Y,0,4,4,,N,4,4,Y,Y,GTR,741991,,,,
+747772,Y,,cohort1,East Asia,Asian,2-Aug-22,11,F,Tiantan,WNT,,Classic,Y,Mixed,Y,0,2,2,,N,2,2,Y,Y,NTR,747772,,,,
+749479,,,cohort1,East Asia,Asian,12-Aug-22,14,F,Tiantan,WNT ,,Classic,Y,Soft,Y,0,3,3,NanoString,N,3,3,Y,Y,NTR,749479,,（走路不稳）,,NanoString
+757423,Y,,cohort1,East Asia,Asian,12-Oct-22,9,F,Tiantan,WNT,,Classic,Y,Soft,Y,0,0,0,,N,0,0,N,N,GTR,757423,,,,
+A088,Y,Y,cohort2,East Asia,Asian,1-Mar-21,9,M,USTC,WNT,,MBEN,N,,Y,0,18,18,,Y,9,9,Y,Y,GTR,A088,,,,
+H007,Y,,cohort2,East Asia,Asian,5-Aug-21,13,F,HS,WNT,,Classic,Y,Soft,Y,0,9,9,,N,9,9,Y,Y,GTR,H007,,,,
+H014,Y,,cohort2,East Asia,Asian,24-Mar-22,14,F,HS,WNT,,Classic,N,Soft,Y,0,2,2,,N,2,2,Y,Y,GTR,H014,,,,
+H015,Y,,cohort2,East Asia,Asian,24-Mar-22,13,M,HS,WNT,,Classic,Y,Soft,Y,0,2,2,,N,2,2,Y,Y,GTR,H015,,,,
+H109,Y,,cohort2,East Asia,Asian,11-Oct-20,12,F,HS,WNT,,Classic,Y,Soft,Y,0,19,19,,N,19,19,Y,Y,GTR,H109,,,,
+HS3,,,cohort2,East Asia,Asian,3-Apr-20,13,M,HS,WNT,,Classic,N,Soft,,0,25,25,,N,25,25,Y,Y,GTR,HS3,,,,
+HX10,,,cohort2,East Asia,Asian,22-Feb-19,10,M,HX,WNT,,Classic,Y,Soft,,0,40,40,,N,40,40,Y,N,GTR,HX10,,,,
+HX20,,,cohort2,East Asia,Asian,18-Apr-20,6,M,HX,WNT,,Classic,N,Hard,,0,26,26,,N,26,26,Y,Y,GTR,HX20,,,,
+HX21,,,cohort2,East Asia,Asian,15-May-20,9,F,HX,WNT,,LCA,N,Hard,,0,25,25,,N,25,25,Y,Y,GTR,HX21,,,,
+HX25,,,cohort2,East Asia,Asian,26-Nov-19,13,F,HX,WNT,,Classic,N,Soft,,0,32,32,,N,32,32,Y,N,GTR,HX25,,,,
+Q039,Y,,cohort2,East Asia,Asian,15-Jun-19,9,M,QL,WNT,,,Y,Soft,Y,0,35,35,,N,35,35,Y,Y,GTR,Q039,,,,
+Q040,Y,,cohort2,East Asia,Asian,22-Jun-19,14,F,QL,WNT,,,Y,Soft,Y,0,35,35,,N,35,35,Y,Y,NTR,Q040,,,,
+Q045,Y,,cohort2,East Asia,Asian,12-Aug-21,16,F,QL,WNT,,,N,Soft,Y,0,10,10,,N,10,10,Y,Y,GTR,Q045,,,,
+Q046,Y,Y,cohort2,East Asia,Asian,9-Sep-21,7,F,QL,WNT,,Classic,N,Soft,Y,0,9,9,,N,9,9,N,Y,NTR,Q046,,,,
+QL1,,,cohort2,East Asia,Asian,19-Nov-18,6,M,QL,WNT,,DN,Y,Soft,,1,9,9,,Y,6,6,N,N,GTR,QL1,,,,
+QL7,,,cohort2,East Asia,Asian,7-Feb-22,5.83,M,QL,WNT,,,N,Hard,,0,4,4,,N,4,4,Y,N,GTR,QL7,,,,
+S054,Y,Y,cohort2,East Asia,Asian,27-May-20,9,F,SB,WNT,,Classic,Y,Soft,Y,0,19.9,19.9,,N,19.9,19.9,Y,Y,GTR,S054,,,,
+S060,Y,Y,cohort2,East Asia,Asian,15-Jun-22,5,M,SB,WNT,,Classic,N,Mixed,Y,0,1,1,,N,1,1,Y,Y,STR,S060,,,,
+S064,Y,Y,cohort2,East Asia,Asian,15-Sep-21,8,M,SB,WNT,,Classic,N,Soft,N,0,9,9,,N,9,9,Y,Y,GTR,S064,,,,
+S065,Y,Y,cohort2,East Asia,Asian,12-Oct-21,7,M,SB,WNT,,Classic,Y,Mixed,Y,0,8,8,,N,8,8,Y,Y,GTR,S065,,,,
+S070,Y,Y,cohort2,East Asia,Asian,17-Jun-21,10,F,SB,WNT,,Classic,Y,Soft,Y,0,12,12,,N,12,12,Y,Y,STR,S070,,,,
+S071,Y,,cohort2,East Asia,Asian,9-Mar-22,10,F,SB,WNT,,Classic,Y,Soft,Y,0,3,3,,N,3,3,Y,Y,GTR,S071,,,,
+S074,Y,,cohort2,East Asia,Asian,14-Dec-20,3,F,SB,WNT,,Classic,Y,Soft,Y,0,18,18,,N,18,18,Y,Y,GTR,S074,,,,
+S076,Y,Y,cohort2,East Asia,Asian,19-Feb-21,6,M,SB,WNT,,Classic,Y,Mixed,Y,0,16,16,,N,16,16,Y,Y,GTR,S076,,,,
+S078,Y,,cohort2,East Asia,Asian,11-May-22,5,M,SB,WNT,,Classic,Y,Mixed,Y,0,1,1,,N,1,1,Y,Y,STR,S078,,,,
+S079,Y,Y,cohort2,East Asia,Asian,7-Feb-22,6,M,SB,WNT,,Classic,Y,Soft,Y,0,4,4,,N,4,4,Y,Y,GTR,S079,,,,
+SB11,,,cohort2,East Asia,Asian,11-Mar-19,9.6,F,SB,WNT,,Classic,Y,Soft,,0,38,38,,N,38,38,Y,Y,NTR,SB11,,,,
+SB16,,,cohort2,East Asia,Asian,3-Jul-20,5.4,M,SB,WNT,,Classic,Y,Soft,,0,22,22,,N,22,22,Y,Y,GTR,SB16,,,,
+SB17,,,cohort2,East Asia,Asian,15-Sep-20,9.6,M,SB,WNT,,Classic,Y,Mixed,,0,20,20,,N,20,20,Y,Y,GTR,SB17,,,,
+X035,Y,Y,cohort2,East Asia,Asian,6-May-22,13,M,XJ,WNT,,Classic,Y,Soft,Y,1,1,1,,N,1,1,Y,N,GTR,X035,,,,
+XJ2,,,cohort2,East Asia,Asian,7-Jun-21,9,M,XJ,WNT,,Classic,Y,Mixed,,0,12,12,,N,12,12,Y,N,GTR,XJ2,,,,
+ZZ11,,,cohort2,East Asia,Asian,3-Dec-20,1.75,M,ZZ,WNT,,Classic,Y,Mixed,,1,9,9,,Y,4,4,N,Y,STR,ZZ11,,,,
+ZZ14,,,cohort2,East Asia,Asian,22-Sep-19,8,M,ZZ,WNT,,Classic,Y,Mixed,,0,32,32,,N,32,32,Y,Y,GTR,ZZ14,,,,
+ZZ4,,,cohort2,East Asia,Asian,7-Mar-22,9,M,ZZ,WNT,,Classic,Y,Hard,,0,2,2,,N,2,2,Y,Y,GTR,ZZ4,,,,
+ZZ9,,,cohort2,East Asia,Asian,11-Nov-21,9,F,ZZ,WNT,,Classic,Y,Hard,,0,6,6,,N,2.5,2.5,Y,Y,STR,ZZ9,,,,
+C17589,Y,,cohort3,North America,Black or African American,1-Jul-10,7.8,M,CBTN,WNT,,,Y,,Y,0,12,12,,N,12.0,12,,,GTR,C17589,,,,
+C217095,Y,,cohort3,North America,White,1-Jul-14,8.2,F,CBTN,WNT,,,N,,Y,0,93.1,93.1,,Y,0.4,0.4,,,GTR,C217095,,,,
+C58548,Y,,cohort3,North America,White,1-Jul-12,11.6,F,CBTN,WNT,,,Y,,Y,0,33.9,33.9,,N,33.9,33.9,Y,Y,NTR,C58548,,,,
+C794457,Y,Y,cohort3,North America,White,1-Jul-16,7.4,M,CBTN,WNT,,,N,,Y,0,66.6,66.6,,Y,56.9,56.9,,,NTR,C794457,,,,
+C798270,Y,,cohort3,North America,White,1-Jul-16,5.1,M,CBTN,WNT,,,N,,Y,0,57.8,57.8,,N,57.8,57.8,,,NTR,C798270,,,,
+S17,Y,,cohort3,North America,Other or not reported,21-Jun-17,9,F,Stanford,WNT,,Classic,Y,,Y,0,61.6,61.6,,N,61.6,61.6,Y,Y,GTR,S17,,,,
+S22,Y,,cohort3,North America,Other or not reported,23-Dec-16,11,M,Stanford,WNT,,Classic,Y,,Y,0,71.8,71.8,,N,71.8,71.8,Y,Y,GTR,S22,,,,
+804828,,,,East Asia,Other or not reported,,23,M,,WNT,,Classic,N,Soft,,0,,19.7,,N,,19.7,Y,Y,GTR,,,,,
+806199,,,,East Asia,Other or not reported,,3,f,,WNT,,Classic,Y,Soft,,0,,7.5,,N,,7.5,Y,Y,GTR,,,,,
+810031,,,,East Asia,Other or not reported,,31,f,,WNT,,Classic,Y,Mixed,,0,,18.8,,N,,18.8,Y,Y,NTR,,,,,
+812303,,,,East Asia,Other or not reported,,9,f,,WNT,,Classic,Y,Soft,,0,,6.4,,N,,6.4,Y,Y,GTR,,,,,
+814627,,,,East Asia,Other or not reported,,4,M,,WNT,,未判断,Y,Soft,,0,,17.5,,N,,17.5,Y,尚未开始,NTR,,,,,
+815423,,,,East Asia,Other or not reported,,8,f,,WNT,,Classic,Y,Soft,,0,,5.6,,N,,5.6,Y,尚未开始,NTR,,,,,
+818186,,,,East Asia,Other or not reported,,9,M,,WNT,,DN,Y,Soft,,0,,16.3,,N,,16.3,Y,尚未开始,NTR,,,,,
+824041,,,,East Asia,Other or not reported,,8,f,,WNT,,Classic,N,Soft,,0,,3.1,,N,,3.1,Y,尚未开始,GTR,,,,,
+824662,,,,East Asia,Other or not reported,,16,f,,WNT,,Classic,N,Soft,,0,,3.0,,N,,3.0,Y,尚未开始,GTR,,,,,
+826527,,,,East Asia,Other or not reported,,13,f,,WNT,,未判断,Y,Soft,,0,,3.4,,N,,3.4,Y,尚未开始,GTR,,,,,

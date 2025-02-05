@@ -1,0 +1,176 @@
+library(DescTools)
+
+#function constr_tab:construct table
+constr_tab <- function(name, subtype, dataframe){
+  intrst_frame <- dataframe[c(name, "Molecular.Subtypes")]
+  intrst_frame <- intrst_frame[nchar(as.character(intrst_frame[[name]])) > 0, ]
+  
+  #change formate
+  intrst_frame[[name]] <- ifelse(intrst_frame[[name]] == '1. Y', "Y", intrst_frame[[name]])
+  intrst_frame[[name]] <- ifelse(intrst_frame[[name]] == '2. N', "N", intrst_frame[[name]])
+  
+  if('Y' %in% intrst_frame[[name]]){
+    intrst_frame <- intrst_frame[intrst_frame[[name]] %in% c("Y", "N"), ]
+  }
+  contigtab <- table(intrst_frame)
+  contigtab <- contigtab[,c(4, 3, 1, 2)]
+  return(contigtab)
+}
+
+#funcion calc_categ_p: calculate p-value for categorical variables
+calc_categ_p <- function(contigtab) {
+  chi_p <- chisq.test(contigtab, simulate.p.value = TRUE)$p.value
+  try_fisher <- try(fisher.test(contigtab, simulate.p.value = TRUE), silent = TRUE)
+  fisher_p <- ifelse(class(try_fisher)=='try-error', -1, fisher.test(contigtab, simulate.p.value = TRUE)$p.value)
+  G_p <- GTest(contigtab, correct = "williams")$p.value
+  return(c(chi_p, fisher_p, G_p))
+}
+
+#function constr_tab_from_num :divide the numeric variable into some groups by some boundaries
+constr_tab_from_num <- function(name, subtype, break1, break2, labels, dataframe) {
+  intrst_frame <- dataframe[c(name, subtype)]
+  intrst_frame <- intrst_frame[rowSums(sapply(intrst_frame, is.nan)) == 0, ]
+  intrst_frame <- intrst_frame[nchar(as.character(intrst_frame[[name]])) > 0, ]
+  intrst_frame[[name]] <- ifelse(intrst_frame[[name]] == '10-90%', '50.0%', intrst_frame[[name]])
+  #convert the percentage format into numeric format
+  intrst_frame[[name]] <- as.numeric(sub("%", "", intrst_frame[[name]])) / 100
+  
+  breaks <- c(0, break1, break2, 1)
+  df <- data.frame(subtype = intrst_frame[[subtype]], ratio = intrst_frame[[name]])
+  df$ratio <- cut(intrst_frame[[name]],
+                    breaks = breaks,
+                    labels = labels,
+                    include.lowest = TRUE)
+  contigtab <- table(df$ratio, df$subtype)
+  contigtab <- contigtab[,c(4, 3, 1, 2)]
+  return(contigtab)
+}
+
+#function constr_num_var: specially for numeric calculation
+constr_num_var <- function(name, subtype, dataframe) {
+  intrst_frame <- dataframe[c(name, subtype)]
+  intrst_frame <- intrst_frame[nchar(as.character(intrst_frame[[name]])) > 0, ]
+  intrst_frame <- intrst_frame[rowSums(sapply(intrst_frame, is.nan)) == 0, ]
+  intrst_frame[[name]] <- ifelse(intrst_frame[[name]] == '10-90%', '50.0%', intrst_frame[[name]])
+  intrst_frame[[name]] <- as.numeric(sub("%", "", intrst_frame[[name]])) / 100
+  i = 1
+  df <- as.data.frame(array(1:8, dim = c(2, 4)))
+  for (sub in c("WNT", "SHH", "G3", "G4")) {
+    rownames(df) <- c("median(Q1, Q3)", "mean(sd)")
+    colnames(df) <- c("WNT", "SHH", "G3", "G4")
+    Subtp <- intrst_frame[intrst_frame[[subtype]] == sub, ]
+    Subtp <- Subtp[[name]]
+    Subtp <- na.omit(Subtp)
+    
+    df[1, i] <- paste0(sprintf("%.2f%%", quantile(Subtp, 0.5) * 100), " (", sprintf("%.2f%%", quantile(Subtp, 0.25) * 100), ",", sprintf("%.2f%%", quantile(Subtp, 0.75) * 100), ")")
+    df[2, i] <- paste0(sprintf("%.2f%%", mean(Subtp) * 100), " (", sprintf("%.2f%%", sd(Subtp) * 100), ")")
+    i = i + 1
+  }
+  formula <- as.formula(paste(name, "~", subtype))
+  result_anova <- aov(formula, data = intrst_frame)
+  p_aov <- summary(result_anova)[[1]][["Pr(>F)"]][1]
+  df[1, 5] <- ifelse(p_aov >= 0.001, paste0(sprintf("%.3f", p_aov), " (ANOVA)"),
+                     "<0.001 (ANOVA)")
+  p_kruskal <- kruskal.test(formula, data = intrst_frame)$p.value
+  df[2, 5] <- ifelse(p_kruskal >= 0.001, paste0(sprintf("%.3f", p_kruskal), " (Kruskal-Wallis Rank Sum test)"),
+                     "<0.001 (Kruskal-Wallis Rank Sum test)")
+  
+  write.csv(df, file="./tempt.csv")
+  df <- read.csv("./tempt.csv")
+  df <- cbind("Variable" = rep("", nrow(df)), df)
+  df[1, 1] <- "Enhancement ratio (#3)"
+  write.table(df, file = "./result.csv", append = TRUE, col.names = FALSE, row.names = FALSE, sep = ",", quote = TRUE)
+}
+
+#change_format:change the cell format into percentage
+change_format <- function(contigtab){
+  write.csv(contigtab, file = "./tempt.csv", row.names = TRUE)
+  df <- read.csv("./tempt.csv", row.names = 1)
+  df0 = df
+  for (i in 1:nrow(df)) {
+    df0[i, ] <- df[i,]/df[nrow(df),] 
+  }
+  for (l in 1:nrow(df)) {
+    df[l, ] <- paste0(as.character(df[l, ]), " (", sprintf("%.2f%%", df0[l, ] * 100), ")")
+  }
+  return(df)
+}
+
+#function add_categ_p:
+add_categ_p <- function(df, result_p){
+  df <- cbind(df, "p-value(chi-square)" = rep("", nrow(df)), 
+              "p-value(Fisher exact)" = rep("", nrow(df)), 
+              "p-value(G-test)" = rep("", nrow(df)) )
+  
+  df[1, "p-value(chi-square)"] <- ifelse(result_p[1] >= 0.001, sprintf("%.3f", result_p[1]), "<0.001")
+  if (result_p[2] == -1) {
+    df[1, "p-value(Fisher exact)"] = "/"
+  }else{
+    df[1, "p-value(Fisher exact)"] <- ifelse(result_p[2] >= 0.001, sprintf("%.3f", result_p[2]), "<0.001")
+  }
+  df[1, "p-value(G-test)"] <- ifelse(result_p[3] >= 0.001, sprintf("%.3f", result_p[1]), "<0.001")
+  return(df)
+}
+
+#import the data frame
+data <- read.csv('/Users/huyanshen/Desktop/AI-Medicine/Research/Joyce/image-comparison/图像特征汇总-2024-Feb-13.csv')
+
+#trim all the values with spaces
+data[] <- lapply(data, function(x) if(is.character(x)) trimws(x) else x)
+
+filtered_data <- subset(data, `Molecular.Subtypes` %in% c('G3', 'G4', 'SHH', 'WNT'))
+
+
+#pick out the columns to be dealt with
+col_list <- c("肿瘤位置","Fourth.ventricle.Infiltration", "肿瘤边界..Tumor.Margin.", "增强比例...Final", "增强程度.相较于动静脉血管强化", "水肿", "囊肿.坏死.cyst.cavitation.change", "脑积水.手术前.", "脑部.M2.转移")
+to_standard <- list("肿瘤位置" = "Six classes",
+                    "Fourth.ventricle.Infiltration" = "Fourth-ventricle infiltration",
+                    "肿瘤边界..Tumor.Margin." = "Tumor Margin",
+                    "增强比例...Final" = "Enhancement pattern (#3)",
+                    "增强程度.相较于动静脉血管强化" = "Ehancement intensity",
+                    "水肿" = "Peritumoral edema",
+                    "囊肿.坏死.cyst.cavitation.change" = "Cystic change/necrosis",
+                    "脑积水.手术前." = "Hydrocephalus_before_Surgery",
+                    "脑部.M2.转移" = "M2 AllDissemination")
+tag = 0
+#for loop
+for (name in col_list) {
+  #construct contigtab and calculate p-value
+  if (name == "增强比例...Final") {
+    contigtab <- constr_tab_from_num(name, "Molecular.Subtypes", 0.1, 0.5, c("none/minimal (<10%)", "heterogeneous (10%-50%)", "diffuse (>=50%)"), filtered_data)
+  }else{
+    contigtab <- constr_tab(name, "Molecular.Subtypes", filtered_data)
+  }
+  result_p <- calc_categ_p(contigtab)
+  total <- colSums(contigtab)
+  contigtab <- rbind(contigtab, Total = total)
+  if (name == "增强程度.相较于动静脉血管强化") {
+    rownames(contigtab) <- c("similar (reference to arteriovenous vascular )", "lower (reference to arteriovenous vascular )", "none", "Total")
+  }
+  if (name == "肿瘤边界..Tumor.Margin.") {
+    rownames(contigtab) <- c("well-defined", "ill-defined", "Total")
+  }
+  
+  #add 3 p_values to the table
+  df <- change_format(contigtab)
+  
+  #add class name to the leftmost column
+  write.csv(df, file="./tempt.csv")
+  df <- read.csv("./tempt.csv")
+  df <- cbind("Variable" = rep("", nrow(df)), df)
+  df[1, 1] <- to_standard[[name]]
+  
+  df <- add_categ_p(df, result_p)
+  
+  if (tag == 0) {
+    #The first classification
+    tag = 1
+    write.csv(df, file="./result.csv", row.names = FALSE)
+  }else{
+    # Append csv2 to csv1 without column names
+    write.table(df, file = "./result.csv", append = TRUE, col.names = FALSE, row.names = FALSE, sep = ",", quote = TRUE)
+  }
+  if(name == "增强比例...Final") {
+    constr_num_var(name, "Molecular.Subtypes", filtered_data)
+  }
+} 

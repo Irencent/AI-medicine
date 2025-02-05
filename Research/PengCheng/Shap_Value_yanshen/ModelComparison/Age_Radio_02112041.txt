@@ -1,0 +1,40 @@
+-------------Features---------------
+['Cohort', 'Subtypes_three', 'fold', 'Age', 'T1E_log-sigma-3-mm-3D_gldm_LargeDependenceHighGrayLevelEmphasis_x', 'T1E_log-sigma-3-mm-3D_glcm_Autocorrelation_x', 'T1E_log-sigma-1-mm-3D_glcm_ClusterShade_x', 'T1E_wavelet-LHL_firstorder_Mean_x', 'T2_wavelet-LLH_glcm_ClusterShade_y', 'T1E_log-sigma-5-mm-3D_glrlm_LowGrayLevelRunEmphasis_x', 'T1E_wavelet-HLL_firstorder_Median_x', 'T1E_wavelet-LHL_firstorder_Median_x', 'T2_wavelet-HHL_firstorder_Skewness_x', 'T1E_log-sigma-3-mm-3D_glrlm_LongRunLowGrayLevelEmphasis_x', 'T1E_lbp-2D_glrlm_RunLengthNonUniformity_x', 'T2_log-sigma-1-mm-3D_gldm_LowGrayLevelEmphasis_x', 'T1E_log-sigma-5-mm-3D_firstorder_90Percentile_x', 'T1E_log-sigma-3-mm-3D_glszm_LowGrayLevelZoneEmphasis_x', 'T2_wavelet-HHL_glcm_SumSquares_x', 'T2_wavelet-HHL_glrlm_GrayLevelNonUniformityNormalized_x', 'T2_wavelet-LLH_gldm_DependenceNonUniformity_x', 'T2_original_shape_Maximum3DDiameter_y', 'T2_original_glszm_LargeAreaEmphasis_y']
+-------------Testing----------------
+All_test_folds:  (514, 3)
+Test AUC :  0.8267
+Test AUC:  [0.8259 0.7984 0.8619] (per fold)
+Test AUC :  [0.8899 0.781  0.8093] (per subtype, [WNT, G3/G4, SHH])
+Test F1 score:  0.685
+Test F1 score:  [0.7071 0.6132 0.7308] (per fold)
+Test F1 score:  [0.6184, 0.7593, 0.5594] (per subtype, [WNT, G3/G4, SHH])
+Test Confusion Matrix: 
+[[ 47  12   8]
+ [ 25 224  54]
+ [ 13  51  80]]
+-----------Validation--------------
+All_val_folds:  (3, 135, 3)
+All_mean_val_folds: (135, 3)
+Validation AUC :  0.7957
+Validation AUC :  [0.8544 0.7532 0.7794] (per subtype, [WNT, G3/G4, SHH])
+Validation f1 score:  0.642
+Validation f1 score:  [0.5882, 0.6933, 0.5581] (per subtype, [WNT, G3/G4, SHH])
+Validation Confusion Matrix: 
+[[10  5  2]
+ [ 6 52 22]
+ [ 1 13 24]]
+-----------Golden--------------
+All_new_folds:  (3, 44, 3)
+All_mean_new_folds: (44, 3)
+Golden AUC :  0.7627
+Golden AUC :  [0.749  0.8017 0.7375] (per subtype, [WNT, G3/G4, SHH])
+Golden f1 score:  0.6403
+Golden f1 score:  [0.1429, 0.7931, 0.25] (per subtype, [WNT, G3/G4, SHH])
+Golden Confusion Matrix: 
+[[ 1  1  5]
+ [ 5 23  5]
+ [ 1  1  2]]
+-------------Params-----------------
+{'max_depth': 5, 'num_leaves': 5, 'learning_rate': 0.3125092121623636, 'max_bin': 306, 'colsample_bytree': 0.9732431550015775, 'reg_alpha': 3.0146164440560503, 'reg_lambda': 0.31638446473679177, 'subsample': 0.7097045946856347, 'min_child_samples': 6, 'min_child_weight': 2.417032331172312, 'n_estimators': 797, 'scale_pos_weight': 6.6180727281595635}
+{'max_depth': 9, 'num_leaves': 2, 'learning_rate': 0.025541058910383434, 'max_bin': 228, 'colsample_bytree': 0.9414660780609835, 'reg_alpha': 1.3733369603347874, 'reg_lambda': 0.568912083510806, 'subsample': 0.42738321084679415, 'min_child_samples': 14, 'min_child_weight': 2.049258132162449, 'n_estimators': 1961, 'scale_pos_weight': 1.3931823260969116}
+{'max_depth': 5, 'num_leaves': 7, 'learning_rate': 0.15475827054726587, 'max_bin': 339, 'colsample_bytree': 0.3490646210350177, 'reg_alpha': 5.179638835983301, 'reg_lambda': 0.07499819319770995, 'subsample': 0.307953862507753, 'min_child_samples': 24, 'min_child_weight': 3.3027534481566097, 'n_estimators': 2035, 'scale_pos_weight': 4.886901932266438}

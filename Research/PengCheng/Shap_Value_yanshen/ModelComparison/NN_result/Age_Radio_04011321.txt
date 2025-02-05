@@ -1,0 +1,41 @@
+-------------Features---------------
+['Cohort', 'Subtypes_three', 'fold', 'Age', 'T1E_log-sigma-3-mm-3D_gldm_LargeDependenceHighGrayLevelEmphasis_x', 'T1E_log-sigma-3-mm-3D_glcm_Autocorrelation_x', 'T1E_log-sigma-1-mm-3D_glcm_ClusterShade_x', 'T1E_wavelet-LHL_firstorder_Mean_x', 'T2_wavelet-LLH_glcm_ClusterShade_y', 'T1E_log-sigma-5-mm-3D_glrlm_LowGrayLevelRunEmphasis_x', 'T1E_wavelet-HLL_firstorder_Median_x', 'T1E_wavelet-LHL_firstorder_Median_x', 'T2_wavelet-HHL_firstorder_Skewness_x', 'T1E_log-sigma-3-mm-3D_glrlm_LongRunLowGrayLevelEmphasis_x', 'T1E_lbp-2D_glrlm_RunLengthNonUniformity_x', 'T2_log-sigma-1-mm-3D_gldm_LowGrayLevelEmphasis_x', 'T1E_log-sigma-5-mm-3D_firstorder_90Percentile_x', 'T1E_log-sigma-3-mm-3D_glszm_LowGrayLevelZoneEmphasis_x', 'T2_wavelet-HHL_glcm_SumSquares_x', 'T2_wavelet-HHL_glrlm_GrayLevelNonUniformityNormalized_x', 'T2_wavelet-LLH_gldm_DependenceNonUniformity_x', 'T2_original_shape_Maximum3DDiameter_y', 'T2_original_glszm_LargeAreaEmphasis_y']
+-------------Testing----------------
+All_test_folds:  (514, 3)
+Test Accuracy: 0.6926 (0.6518, 0.7335)
+Test AUC : 0.8112 (0.7748, 0.8461)
+Test AUC:  ['0.7998 (0.7335, 0.8601)', '0.8064 (0.7495, 0.8587)', '0.8559 (0.8041, 0.9025)'] (per fold)
+Test AUC :  ['0.8546 (0.7955, 0.9085)', '0.7835 (0.7441, 0.8228)', '0.7955 (0.751, 0.8402)'] (per subtype, [WNT, G3/G4, SHH])
+Test F1 score: 0.6941 (0.6549, 0.7337)
+Test F1 score:  ['0.6982 (0.6332, 0.7675)', '0.6464 (0.5734, 0.7194)', '0.7368 (0.6667, 0.8016)'] (per fold)
+Test F1 score:  ['0.5882 (0.4786, 0.6829)', '0.7638 (0.7239, 0.7987)', '0.5966 (0.5271, 0.6601)'] (per subtype, [WNT, G3/G4, SHH])
+Test Confusion Matrix: 
+[[ 40  16  11]
+ [ 23 228  52]
+ [  6  50  88]]
+-----------Validation--------------
+All_val_folds:  (3, 135, 3)
+All_mean_val_folds: (135, 3)
+Validation AUC :  0.7946
+Validation AUC :  [0.844  0.7732 0.7667] (per subtype, [WNT, G3/G4, SHH])
+Validation f1 score:  0.7033
+Validation f1 score:  [0.625, 0.7702, 0.5974] (per subtype, [WNT, G3/G4, SHH])
+Validation Confusion Matrix: 
+[[10  5  2]
+ [ 4 62 14]
+ [ 1 14 23]]
+-----------Golden--------------
+All_new_folds:  (3, 44, 3)
+All_mean_new_folds: (44, 3)
+Golden AUC :  0.8062
+Golden AUC :  [0.7375 0.8375 0.8438] (per subtype, [WNT, G3/G4, SHH])
+Golden f1 score:  0.6734
+Golden f1 score:  [nan, 0.8525, 0.375] (per subtype, [WNT, G3/G4, SHH])
+Golden Confusion Matrix: 
+[[ 0  2  5]
+ [ 3 26  4]
+ [ 1  0  3]]
+-------------Params-----------------
+{'alpha': 0.0005656938640490419, 'batch_size': 343, 'learning_rate_init': 0.0032034174061037046, 'power_t': 1.642605596631681, 'max_iter': 789, 'random_state': 4, 'tol': 0.00010244376257628324, 'momentum': 0.13775034461799884, 'validation_fraction': 0.9682502535343684, 'beta_1': 0.4446492621456912, 'beta_2': 0.46646448266480445, 'epsilon': 6.009229424373674e-08, 'n_iter_no_change': 77, 'max_fun': 44032}
+{'alpha': 0.0007411528600599452, 'batch_size': 117, 'learning_rate_init': 0.008558886603184736, 'power_t': 1.0213832851087523, 'max_iter': 171, 'random_state': 6, 'tol': 0.0009398506792928305, 'momentum': 0.6006517316825081, 'validation_fraction': 0.5267471482371865, 'beta_1': 0.6170980090372886, 'beta_2': 0.6046913334770397, 'epsilon': 2.2060407646961715e-08, 'n_iter_no_change': 7, 'max_fun': 19766}
+{'alpha': 0.00040567808637365516, 'batch_size': 709, 'learning_rate_init': 0.008257649950963602, 'power_t': 1.0678739136124835, 'max_iter': 480, 'random_state': 7, 'tol': 0.0008782841074207234, 'momentum': 0.7405206490569102, 'validation_fraction': 0.6803941134640467, 'beta_1': 0.03806126312245661, 'beta_2': 0.16810240982321356, 'epsilon': 6.924396286910769e-08, 'n_iter_no_change': 96, 'max_fun': 39728}

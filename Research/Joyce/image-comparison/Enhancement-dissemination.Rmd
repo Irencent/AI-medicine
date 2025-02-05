@@ -1,0 +1,1204 @@
+---
+title: "Enhancement-dissemination"
+output: pdf_document
+date: "2024-01-17"
+---
+
+# Import data
+
+```{r}
+data = read.csv("/Users/huyanshen/Desktop/AI-Medicine/Research/Joyce/image-comparison/图像特征汇总-2024-Feb-13.csv")
+# colnames(data)
+
+#trim all the values with spaces
+data[] <- lapply(data, function(x) if(is.character(x)) trimws(x) else x)
+
+#delete redundant columns, and filter unnecessary molecular subtypes
+data <- data[, !names(data) %in% c('手术时间', '年龄', '性别', '医院')]
+data <- subset(data, `Molecular.Subtypes` %in% c('G3', 'G4', 'SHH', 'WNT'))
+
+colnames(data)
+data
+```
+
+```{r}
+intrst_frame <- data[c("增强比例...Final", "Molecular.Subtypes")]
+intrst_frame <- data[c("Molecular.Subtypes", "增强比例...Final")]
+intrst_frame$"增强比例...Final" <- ifelse(intrst_frame$"增强比例...Final" == '10-90%', '50.0%', intrst_frame$"增强比例...Final")
+intrst_frame <- intrst_frame[nchar(as.character(intrst_frame$增强比例...Final)) > 0, ]
+
+intrst_frame <- intrst_frame[rowSums(sapply(intrst_frame, is.nan)) == 0, ]
+intrst_frame[[name]] <- as.numeric(sub("%", "", intrst_frame[[name]])) / 100
+Subtp <- intrst_frame[intrst_frame[["Molecular.Subtypes"]] == "SHH", ]
+Subtp <- Subtp[["增强比例...Final"]]
+#Subtp <- na.omit(Subtp)
+median(Subtp)
+```
+
+# Enhancement pattern (4 groups)
+
+## pattern #1
+
+```{r}
+library(DescTools)
+#select the enhancement column and drop the empty string
+interested_frame <- data[c("Molecular.Subtypes", "增强比例...Final")]
+interested_frame <- interested_frame[nchar(as.character(interested_frame$增强比例...Final)) > 0, ]
+
+#convert the percentage format into numeric format
+interested_frame$增强比例...Final <- as.numeric(sub("%", "", interested_frame$增强比例...Final)) / 100
+
+#divide the enhancement ratio column by the range of the ratio
+breaks <- c(0, 0.3333, 0.6666, 1)
+df_1 <- data.frame(subtype = interested_frame$Molecular.Subtypes, ratio = interested_frame$增强比例...Final)
+df_1$ratio <- cut(interested_frame$增强比例...Final, breaks = breaks, labels = c("none/minimal (<10%)", "incomplete (1/3-2/3))", "diffuse (>=2/3)"), include.lowest = TRUE)
+
+contingency_table <- table(df_1$ratio, df_1$subtype)
+result_chi <- chisq.test(contingency_table, simulate.p.value = TRUE)
+result_chi
+result_G <- GTest(contingency_table)
+result_G
+
+total <- colSums(contingency_table)
+contingency_table <- rbind(contingency_table, Total = total)
+
+contingency_table <- contingency_table[, c(4, 3, 1, 2)]
+write.csv(contingency_table, file = "./result.csv", row.names = TRUE)
+df <- read.csv("./result.csv")
+df
+```
+
+## pattern #2
+
+```{r}
+breaks <- c(0, 0.1, 0.5, 1)
+df_1$ratio <- cut(interested_frame$增强比例...Final, breaks = breaks, labels = c("none/minimal (<10%)", "incomplete (10% - 50%))", "diffuse (>=50%)"), include.lowest = TRUE)
+
+contingency_table <- table(df_1$ratio, df_1$subtype)
+result_chi <- chisq.test(contingency_table[c(1, 2), ])
+result_chi
+rG <- GTest(contingency_table)
+rG
+
+total <- colSums(contingency_table)
+contingency_table <- rbind(contingency_table, Total = total)
+
+contingency_table <- contingency_table[, c(4, 3, 1, 2)]
+write.csv(contingency_table, file = "./result.csv", row.names = TRUE)
+df <- read.csv("./result.csv")
+df
+```
+
+## pattern #3
+
+```{r}
+
+```
+
+```{r}
+#interested_frame$Molecular.Subtypes
+WNT <- interested_frame[interested_frame$Molecular.Subtypes == "WNT", ]
+WNT <- WNT$增强比例...Final
+
+
+SHH <- interested_frame[interested_frame$Molecular.Subtypes == "SHH", ]
+SHH <- SHH$增强比例...Final
+
+G3 <- interested_frame[interested_frame$Molecular.Subtypes == "G3", ]
+G3 <- G3$增强比例...Final
+
+G4 <- interested_frame[interested_frame$Molecular.Subtypes == "G4", ]
+G4 <- G4$增强比例...Final
+
+
+result_anova <- aov(增强比例...Final ~ Molecular.Subtypes, data = interested_frame)
+result_kruskal <- kruskal.test(增强比例...Final ~ Molecular.Subtypes, data = interested_frame)
+
+
+summary(result_anova)
+result_kruskal
+#plot(result_anova)
+
+print("median")
+median(WNT)
+median(SHH)
+median(G3)
+median(G4)
+
+print("mean")
+mean(WNT)
+mean(SHH)
+mean(G3)
+mean(G4)
+print("Q")
+
+sd(WNT)
+sd(SHH)
+sd(G3)
+sd(G4)
+```
+
+# Enhancement intensity(4 groups)
+
+```{r}
+interested_frame <- data[c("Molecular.Subtypes", "增强程度.相较于动静脉血管强化")]
+interested_frame <- interested_frame[nchar(as.character(interested_frame$增强程度.相较于动静脉血管强化)) > 0, ]
+
+contingency_table <- table(interested_frame$增强程度.相较于动静脉血管强化, interested_frame$Molecular.Subtypes)
+result_chi <- chisq.test(contingency_table)
+rG <- GTest(contingency_table)
+rG
+
+total <- colSums(contingency_table)
+contingency_table <- rbind(contingency_table, Total = total)
+
+contingency_table <- contingency_table[, c(4, 3, 1, 2)]
+write.csv(contingency_table, file = "./result.csv", row.names = TRUE)
+df <- read.csv("./result.csv")
+df
+result_chi
+```
+
+# Enhancement pattern(SHH)
+
+```{r}
+data = read.csv("./图像特征汇总-2024-1-18-shareYanshen.csv")
+#colnames(data)
+
+#trim all the values with spaces
+data[] <- lapply(data, function(x) if(is.character(x)) trimws(x) else x)
+
+#delete redundant columns, and filter unnecessary molecular subtypes
+data <- data[, !names(data) %in% c('手术时间', '年龄', '性别', '医院')]
+data <- subset(data, `Molecular.Subtypes` %in% c('SHH'))
+data <- subset(data, `Genetic.Mutations` %in% c('TP53-', 'TP53+'))
+
+colnames(data)
+data
+```
+
+## pattern #1
+
+```{r}
+#select the enhancement column and drop the empty string
+interested_frame <- data[c("Genetic.Mutations", "增强比例...Final")]
+interested_frame <- interested_frame[nchar(as.character(interested_frame$增强比例...Final)) > 0, ]
+
+#convert the percentage format into numeric format
+interested_frame$增强比例...Final <- as.numeric(sub("%", "", interested_frame$增强比例...Final)) / 100
+
+#divide the enhancement ratio column by the range of the ratio
+breaks <- c(0, 0.3333, 0.6666, 1)
+df_1 <- data.frame(subtype = interested_frame$Genetic.Mutations, ratio = interested_frame$增强比例...Final)
+df_1$ratio <- cut(interested_frame$增强比例...Final, breaks = breaks, labels = c("none/minimal (<1/3)", "incomplete (1/3-2/3))", "diffuse (>=2/3)"), include.lowest = TRUE)
+
+contingency_table <- table(df_1$ratio, df_1$subtype)
+result_chi <- chisq.test(contingency_table, simulate.p.value = TRUE)
+result_chi
+result_G <- GTest(contingency_table)
+result_G
+
+total <- colSums(contingency_table)
+contingency_table <- rbind(contingency_table, Total = total)
+
+contingency_table <- contingency_table[, c(2, 1)]
+write.csv(contingency_table, file = "./result0_1.csv", row.names = TRUE)
+df <- read.csv("./result0_1.csv")
+
+df$p.value <- ""
+df$p.value[df$X == "none/minimal (<1/3)"] <- ifelse(result_chi$p.value < 0.001, "<0.001", sprintf("%.3f", result_chi$p.value))
+
+write.csv(df, file = "./result0_1.csv", row.names = TRUE)
+df
+```
+
+## pattern #2
+
+```{r}
+breaks <- c(0, 0.1, 0.5, 1)
+df_1$ratio <- cut(interested_frame$增强比例...Final, breaks = breaks, labels = c("none/minimal (<10%)", "incomplete (10% - 90%))", "diffuse (>=90%)"), include.lowest = TRUE)
+
+contingency_table <- table(df_1$ratio, df_1$subtype)
+
+result_chi <- chisq.test(contingency_table[c(1, 2), ])
+contingency_table[c(1,2), ]
+result_chi
+rG <- GTest(contingency_table[c(1, 2), ])
+rG
+
+total <- colSums(contingency_table)
+contingency_table <- rbind(contingency_table, Total = total)
+
+contingency_table <- contingency_table[, c(2, 1)]
+write.csv(contingency_table, file = "./result0_2.csv", row.names = TRUE)
+df <- read.csv("./result0_2.csv")
+
+df$p.value <- ""
+df$p.value[df$X == "none/minimal (<10%)"] <- ifelse(result_chi$p.value < 0.001, "<0.001", sprintf("%.3f", result_chi$p.value))
+
+write.csv(df, file = "./result0_1.csv", row.names = TRUE)
+df
+```
+
+## pattern #3
+
+```{r}
+TP53p <- interested_frame[interested_frame$Genetic.Mutations == "TP53+", ,]
+TP53p <- TP53p$增强比例...Final
+
+TP53m <- interested_frame[interested_frame$Genetic.Mutations == "TP53-", ]
+TP53m <- TP53m$增强比例...Final
+
+result_anova <- aov(增强比例...Final ~ Genetic.Mutations, data = interested_frame)
+result_kruskal <- kruskal.test(增强比例...Final ~ Genetic.Mutations, data = interested_frame)
+#tukey_result <- TukeyHSD(result_anova)
+
+
+summary(result_anova)
+result_kruskal
+
+median(TP53p)
+median(TP53m)
+
+mean(TP53p)
+mean(TP53m)
+
+sd(TP53p)
+sd(TP53m)
+```
+
+# Enhancement intensity
+
+```{r}
+interested_frame <- data[c("Genetic.Mutations", "增强程度.相较于动静脉血管强化")]
+interested_frame <- interested_frame[nchar(as.character(interested_frame$增强程度.相较于动静脉血管强化)) > 0, ]
+
+contingency_table <- table(interested_frame$增强程度.相较于动静脉血管强化, interested_frame$Genetic.Mutations)
+result_chi <- chisq.test(contingency_table, simulate.p.value = TRUE)
+rG <- GTest(contingency_table)
+
+total <- colSums(contingency_table)
+contingency_table <- rbind(contingency_table, Total = total)
+
+contingency_table <- contingency_table[, c(2, 1)]
+write.csv(contingency_table, file = "./result0_3.csv", row.names = TRUE)
+df <- read.csv("./result0_3.csv")
+df
+result_chi
+rG
+```
+
+# Dissemination(4 groups)
+
+```{r}
+data = read.csv("./CancerCell-2024-1-15-Dissemination-1.csv")
+#colnames(data)
+
+#trim all the values with spaces
+data[] <- lapply(data, function(x) if(is.character(x)) trimws(x) else x)
+
+#delete redundant columns, and filter unnecessary molecular subtypes
+data <- data[, !names(data) %in% c('手术时间', '年龄', '性别', '医院')]
+data <- subset(data, `Molecular.Subtypes` %in% c('G3', 'G4', 'SHH', 'WNT'))
+
+colnames(data)
+data
+```
+
+### Ependymal
+
+```{r}
+help("fisher.test")
+```
+
+```{r}
+library(dplyr)
+
+subtype <- c(rep("WNT", 0), rep("SHH", 3), rep("G3", 8), rep("G4", 14))
+existence <- c(rep("y", 0), rep("n", 0),
+            rep("y", 0), rep("n", 3),
+            rep("y", 0), rep("n", 8),
+            rep("y", 3), rep("n", 11))
+
+test_frame <- data.frame(Subtype = subtype, Existence = existence)
+test_table <- table(test_frame)
+test_table <- t(test_table)
+test_table <- test_table[, c(3, 1, 2)]
+test_table
+test_result <- fisher.test(test_table, simulate.p.value = TRUE)
+test_result
+```
+
+```{r}
+subtype <- c(rep("WNT", 105), rep("SHH", 200), rep("G3", 8), rep("G4", 14))
+existence <- c(rep("y", 0), rep("n", 1),
+            rep("y", 0), rep("n", 3),
+            rep("y", 3), rep("n", 5),
+            rep("y", 0), rep("n", 14))
+
+test_frame <- data.frame(Subtype = subtype,Existence = existence)
+test_table <- table(test_frame$Subtype, test_frame$Existence)
+test_table <- t(test_table)
+test_table <- test_table[, c(4, 3, 1, 2)]
+y_table <- test_table[2, , drop=FALSE]
+y_table
+test_result <- chisq.test(y_table, 
+                          simulate.p.value = TRUE
+                          )
+test_result
+```
+
+```{r}
+ependaymal_data <- data[c("Molecular.Subtypes", "Ependymal.Dissemination")]
+ependaymal_data <- ependaymal_data[nchar(as.character(ependaymal_data$Ependymal.Dissemination)) > 0, ]
+
+totalTable <- table(ependaymal_data$Ependymal.Dissemination, ependaymal_data$Molecular.Subtypes)
+
+totalTable <- totalTable[, c(4, 3, 1, 2)]
+total <- colSums(totalTable)
+totalTable <- rbind(totalTable, Total = total)
+totalTable
+
+ECmDp <- totalTable[2, , drop = FALSE]
+ECpDp <- totalTable[1, , drop = FALSE]
+ECpN <- totalTable[4, , drop = FALSE]
+Etotal <- totalTable[5, , drop = FALSE]
+```
+
+```{r}
+result1 <- chisq.test(ECmDp, simulate.p.value = TRUE)
+ECmDp
+result1
+
+result2 <- chisq.test(ECpDp, simulate.p.value = TRUE)
+ECpDp
+result2
+
+result3 <- chisq.test(ECpN, simulate.p.value = TRUE)
+ECpN
+result3
+
+result4 <- chisq.test(Etotal, simulate.p.value = TRUE)
+Etotal
+result4
+```
+
+```{r}
+data_c1 <- data.frame(
+  Frequency1 = c(1, 3, 2, 5),  
+  State1 = factor(c("State1", "State2", "State3", "State4"))
+)
+result1 <- kruskal.test(Frequency1 ~ State1, data = data_c1)
+
+
+
+data_c2 <- data.frame(
+  Frequency = c(0, 3, 0, 10),  
+  State = factor(c("State1", "State2", "State3", "State4"))
+)
+result2 <- kruskal.test(Frequency ~ State, data = data_c2)
+
+
+data_c3 <- data.frame(
+  Frequency = c(0, 0, 0, 1),  
+  State = factor(c("State1", "State2", "State3", "State4"))
+)
+result3 <- kruskal.test(Frequency ~ State, data = data_c3)
+
+
+result1
+result2
+result3
+```
+
+### Ependymal+3rd V.I.R. Dissemination
+
+```{r}
+ependaymal_data <- data[c("Molecular.Subtypes", "Ependymal.3rd.V.I.R..Dissemination")]
+ependaymal_data <- ependaymal_data[nchar(as.character(ependaymal_data$Ependymal.3rd.V.I.R..Dissemination)) > 0, ]
+
+totalTable <- table(ependaymal_data$Ependymal.3rd.V.I.R..Dissemination, ependaymal_data$Molecular.Subtypes)
+
+totalTable <- totalTable[, c(4, 3, 1, 2)]
+total <- colSums(totalTable)
+totalTable <- rbind(totalTable, Total = total)
+totalTable
+
+yes <- totalTable[3, , drop = FALSE]
+
+r <- chisq.test(yes, simulate.p.value = TRUE)
+yes
+r
+```
+
+## 3.r.d VIR
+
+```{r}
+VIRdata <- data[c("Molecular.Subtypes", "X3rd.V.I.R..Dissemination")]
+#VIRdata1 <- data[c("病人ID", "Molecular.Subtypes", "X3rd.V.I.R..Dissemination")]
+#VIRdata1[VIRdata1$X3rd.V.I.R..Dissemination == "3. 3rd V.I.R. C-/D+", , ]
+VIRdata <- VIRdata[nchar(as.character(VIRdata$X3rd.V.I.R..Disseminatio)) > 0, ]
+
+totalTable <- table(VIRdata$X3rd.V.I.R..Disseminatio, VIRdata$Molecular.Subtypes)
+totalTable <- totalTable[, c(4, 3, 1, 2)]
+total <- colSums(totalTable)
+totalTable <- rbind(totalTable, Total = total)
+totalTable
+
+VCmDp <- totalTable[3, , drop = FALSE]
+VCpDp <- totalTable[1, , drop = FALSE]
+VCpDm <- totalTable[2, , drop = FALSE]
+VCpN <- totalTable[5, , drop = FALSE]
+VTotal <- totalTable[6, , drop = FALSE]
+
+r <- chisq.test(VCmDp, simulate.p.value = TRUE)
+VCmDp
+r
+
+r <- chisq.test(VCpDp, simulate.p.value = TRUE)
+VCpDp
+r
+
+r <- chisq.test(VCpDm, simulate.p.value = TRUE)
+VCpDm
+r
+
+r <- chisq.test(VCpN, simulate.p.value = TRUE)
+VCpN
+r
+
+r <- chisq.test(VTotal, simulate.p.value = TRUE)
+VTotal
+r
+```
+
+```{r}
+# Creating the matrix
+my_matrix <- matrix(c(1, 2, 3, 4), nrow = 1)
+
+# Setting dimension names
+dimnames(my_matrix) <- list("Row1" = c("Row1"), 
+                            "Columns" = c("Column1", "Column2", "Column3", "Column4"))
+
+# Converting to a table
+my_table <- as.table(my_matrix)
+
+# View the table
+print(my_table)
+```
+
+## LMD
+
+### sup LMD
+
+```{r}
+SupLMDdata <- data[c("Molecular.Subtypes", "Supratentorial.Leptomeningeal..LMD.")]
+SupLMDdata <- SupLMDdata[nchar(as.character(SupLMDdata$Supratentorial.Leptomeningeal..LMD.)) > 0, ]
+
+totalTable <- table(SupLMDdata$Supratentorial.Leptomeningeal..LMD., SupLMDdata$Molecular.Subtypes)
+totalTable <- totalTable[, c(4, 3, 1, 2)]
+total <- colSums(totalTable)
+totalTable <- rbind(totalTable, Total = total)
+totalTable
+
+VCmDp <- totalTable[3, , drop = FALSE]
+VCpDp <- totalTable[1, , drop = FALSE]
+VCpDm <- totalTable[2, , drop = FALSE]
+VCpN <- totalTable[4, , drop = FALSE]
+VTotal <- totalTable[5, , drop = FALSE]
+
+r <- chisq.test(VCmDp, simulate.p.value = TRUE)
+VCmDp
+r
+
+r <- chisq.test(VCpDp, simulate.p.value = TRUE)
+VCpDp
+r
+
+r <- chisq.test(VCpDm, simulate.p.value = TRUE)
+VCpDm
+r
+
+r <- chisq.test(VCpN, simulate.p.value = TRUE)
+VCpN
+r
+
+r <- chisq.test(VTotal, simulate.p.value = TRUE)
+VTotal
+r
+```
+
+### Inf LMD
+
+```{r}
+SupLMDdata <- data[c("Molecular.Subtypes", "Infratentorial.Leptomeningeal")]
+SupLMDdata <- SupLMDdata[nchar(as.character(SupLMDdata$Infratentorial.Leptomeningeal)) > 0, ]
+
+totalTable <- table(SupLMDdata$Infratentorial.Leptomeningeal, SupLMDdata$Molecular.Subtypes)
+totalTable <- totalTable[, c(4, 3, 1, 2)]
+total <- colSums(totalTable)
+totalTable <- rbind(totalTable, Total = total)
+totalTable
+
+VCmDp <- totalTable[3, , drop = FALSE]
+VCpDp <- totalTable[1, , drop = FALSE]
+VCpDm <- totalTable[2, , drop = FALSE]
+VCpN <- totalTable[4, , drop = FALSE]
+VTotal <- totalTable[5, , drop = FALSE]
+
+r <- chisq.test(VCmDp, simulate.p.value = TRUE)
+VCmDp
+r
+
+r <- chisq.test(VCpDp, simulate.p.value = TRUE)
+VCpDp
+r
+
+r <- chisq.test(VCpDm, simulate.p.value = TRUE)
+VCpDm
+r
+
+r <- chisq.test(VCpN, simulate.p.value = TRUE)
+VCpN
+r
+
+r <- chisq.test(VTotal, simulate.p.value = TRUE)
+VTotal
+r
+```
+
+### Sup + Inf
+
+```{r}
+SupLMDdata <- data[c("Molecular.Subtypes", "LMD.pattern")]
+SupLMDdata <- SupLMDdata[nchar(as.character(SupLMDdata$LMD.pattern)) > 0, ]
+
+totalTable <- table(SupLMDdata$LMD.pattern, SupLMDdata$Molecular.Subtypes)
+totalTable <- totalTable[, c(4, 3, 1, 2)]
+total <- colSums(totalTable)
+totalTable <- rbind(totalTable, Total = total)
+totalTable
+
+VCmDp <- totalTable[1, , drop = FALSE]
+VCpDp <- totalTable[3, , drop = FALSE]
+VCpDm <- totalTable[2, , drop = FALSE]
+VCpN <- totalTable[4, , drop = FALSE]
+VTotal <- totalTable[5, , drop = FALSE]
+
+r <- chisq.test(VCmDp, simulate.p.value = TRUE)
+VCmDp
+r
+
+r <- chisq.test(VCpDp, simulate.p.value = TRUE)
+VCpDp
+r
+
+r <- chisq.test(VCpDm, simulate.p.value = TRUE)
+VCpDm
+r
+
+r <- chisq.test(VCpN, simulate.p.value = TRUE)
+VCpN
+r
+
+r <- chisq.test(VTotal, simulate.p.value = TRUE)
+VTotal
+r
+```
+
+### All Dissemination
+
+```{r}
+ependaymal_data <- data[c("Molecular.Subtypes", "All.Dissemination")]
+ependaymal_data <- ependaymal_data[nchar(as.character(ependaymal_data$All.Dissemination)) > 0, ]
+
+totalTable <- table(ependaymal_data$All.Dissemination, ependaymal_data$Molecular.Subtypes)
+
+totalTable <- totalTable[, c(4, 3, 1, 2)]
+total <- colSums(totalTable)
+totalTable <- rbind(totalTable, Total = total)
+totalTable
+
+yes <- totalTable[3, , drop = FALSE]
+
+r <- chisq.test(yes, simulate.p.value = TRUE)
+yes
+r
+```
+
+## Dissemination (SHH)
+
+```{r}
+data = read.csv("./CancerCell-2024-1-15-Dissemination-1.csv")
+#colnames(data)
+
+#trim all the values with spaces
+data[] <- lapply(data, function(x) if(is.character(x)) trimws(x) else x)
+
+#delete redundant columns, and filter unnecessary molecular subtypes
+data <- data[, !names(data) %in% c('手术时间', '年龄', '性别', '医院')]
+data <- subset(data, `Molecular.Subtypes` %in% c('SHH'))
+data <- subset(data, `Genetic.Mutations` %in% c('TP53-', 'TP53+'))
+
+colnames(data)
+data
+```
+
+### Ependymal
+
+```{r}
+ependaymal_data <- data[c("Genetic.Mutations", "Ependymal.Dissemination")]
+ependaymal_data <- ependaymal_data[nchar(as.character(ependaymal_data$Ependymal.Dissemination)) > 0, ]
+
+totalTable <- table(ependaymal_data$Ependymal.Dissemination, ependaymal_data$Genetic.Mutations)
+
+totalTable <- totalTable[, c(2, 1)]
+total <- colSums(totalTable)
+totalTable <- rbind(totalTable, Total = total)
+totalTable
+
+ECmDp <- totalTable[2, , drop = FALSE]
+ECpDp <- totalTable[1, , drop = FALSE]
+#ECpN <- totalTable[4, , drop = FALSE]
+Etotal <- totalTable[3, , drop = FALSE]
+
+r <- chisq.test(ECmDp, simulate.p.value = TRUE)
+ECmDp
+r
+
+r <- chisq.test(ECpDp, simulate.p.value = TRUE)
+ECpDp
+r
+
+#result3 <- chisq.test(ECpN, simulate.p.value = TRUE)
+#ECpN
+#r
+
+r <- chisq.test(Etotal, simulate.p.value = TRUE)
+Etotal
+r
+```
+
+### 3rd VIR
+
+```{r}
+ependaymal_data <- data[c("Genetic.Mutations", "X3rd.V.I.R..Dissemination")]
+ependaymal_data <- ependaymal_data[nchar(as.character(ependaymal_data$X3rd.V.I.R..Dissemination)) > 0, ]
+
+totalTable <- table(ependaymal_data$X3rd.V.I.R..Dissemination, ependaymal_data$Genetic.Mutations)
+
+totalTable <- totalTable[, c(2, 1)]
+total <- colSums(totalTable)
+totalTable <- rbind(totalTable, Total = total)
+totalTable
+
+ECmDp <- totalTable[3, , drop = FALSE]
+ECpDp <- totalTable[1, , drop = FALSE]
+CpDm <- totalTable[2, , drop = FALSE]
+ECpN <- totalTable[4, , drop = FALSE]
+Etotal <- totalTable[5, , drop = FALSE]
+
+r <- chisq.test(ECmDp, simulate.p.value = TRUE)
+ECmDp
+r
+
+r <- chisq.test(ECpDp, simulate.p.value = TRUE)
+ECpDp
+r
+
+r <- chisq.test(CpDm, simulate.p.value = TRUE)
+CpDm
+r
+
+r <- chisq.test(ECpN, simulate.p.value = TRUE)
+ECpN
+r
+
+r <- chisq.test(Etotal, simulate.p.value = TRUE)
+Etotal
+r
+```
+
+### Ependymal+3rd V.I.R. Dissemination
+
+```{r}
+ependaymal_data <- data[c("Genetic.Mutations", "Ependymal.3rd.V.I.R..Dissemination")]
+ependaymal_data <- ependaymal_data[nchar(as.character(ependaymal_data$Ependymal.3rd.V.I.R..Dissemination)) > 0, ]
+
+totalTable <- table(ependaymal_data$Ependymal.3rd.V.I.R..Dissemination, ependaymal_data$Genetic.Mutations)
+
+totalTable <- totalTable[, c(2, 1)]
+totalTable
+
+EVtotal <- totalTable[3, , drop = FALSE]
+r <- chisq.test(EVtotal, simulate.p.value = TRUE)
+EVtotal
+r
+
+```
+
+## LMD
+
+### sup
+
+```{r}
+ependaymal_data <- data[c("Genetic.Mutations", "Supratentorial.Leptomeningeal..LMD.")]
+ependaymal_data <- ependaymal_data[nchar(as.character(ependaymal_data$Supratentorial.Leptomeningeal..LMD.)) > 0, ]
+
+totalTable <- table(ependaymal_data$Supratentorial.Leptomeningeal..LMD., ependaymal_data$Genetic.Mutations)
+
+totalTable <- totalTable[, c(2, 1)]
+total <- colSums(totalTable)
+totalTable <- rbind(totalTable, Total = total)
+totalTable
+
+ECmDp <- totalTable[3, , drop = FALSE]
+ECpDp <- totalTable[1, , drop = FALSE]
+CpDm <- totalTable[2, , drop = FALSE]
+ECpN <- totalTable[4, , drop = FALSE]
+Etotal <- totalTable[5, , drop = FALSE]
+
+r <- chisq.test(ECmDp, simulate.p.value = TRUE)
+ECmDp
+r
+
+r <- chisq.test(ECpDp, simulate.p.value = TRUE)
+ECpDp
+r
+
+r <- chisq.test(CpDm, simulate.p.value = TRUE)
+CpDm
+r
+
+r <- chisq.test(ECpN, simulate.p.value = TRUE)
+ECpN
+r
+
+r <- chisq.test(Etotal, simulate.p.value = TRUE)
+Etotal
+r
+```
+
+### Inf
+
+```{r}
+ependaymal_data <- data[c("Genetic.Mutations", "Infratentorial.Leptomeningeal")]
+ependaymal_data <- ependaymal_data[nchar(as.character(ependaymal_data$Infratentorial.Leptomeningeal)) > 0, ]
+
+totalTable <- table(ependaymal_data$Infratentorial.Leptomeningeal, ependaymal_data$Genetic.Mutations)
+
+totalTable <- totalTable[, c(2, 1)]
+total <- colSums(totalTable)
+totalTable <- rbind(totalTable, Total = total)
+totalTable
+
+ECmDp <- totalTable[3, , drop = FALSE]
+ECpDp <- totalTable[1, , drop = FALSE]
+CpDm <- totalTable[2, , drop = FALSE]
+ECpN <- totalTable[4, , drop = FALSE]
+Etotal <- totalTable[5, , drop = FALSE]
+
+r <- chisq.test(ECmDp, simulate.p.value = TRUE)
+ECmDp
+r
+
+r <- chisq.test(ECpDp, simulate.p.value = TRUE)
+ECpDp
+r
+
+r <- chisq.test(CpDm, simulate.p.value = TRUE)
+CpDm
+r
+
+r <- chisq.test(ECpN, simulate.p.value = TRUE)
+ECpN
+r
+
+r <- chisq.test(Etotal, simulate.p.value = TRUE)
+Etotal
+r
+```
+
+### sup + inf
+
+```{r}
+ependaymal_data <- data[c("Genetic.Mutations", "LMD.pattern")]
+ependaymal_data <- ependaymal_data[nchar(as.character(ependaymal_data$LMD.pattern)) > 0, ]
+
+totalTable <- table(ependaymal_data$LMD.pattern, ependaymal_data$Genetic.Mutations)
+
+totalTable <- totalTable[, c(2, 1)]
+total <- colSums(totalTable)
+totalTable <- rbind(totalTable, Total = total)
+totalTable
+
+ECmDp <- totalTable[3, , drop = FALSE]
+ECpDp <- totalTable[1, , drop = FALSE]
+CpDm <- totalTable[2, , drop = FALSE]
+ECpN <- totalTable[4, , drop = FALSE]
+Etotal <- totalTable[5, , drop = FALSE]
+
+r <- chisq.test(ECmDp, simulate.p.value = TRUE)
+ECmDp
+r
+
+r <- chisq.test(ECpDp, simulate.p.value = TRUE)
+ECpDp
+r
+
+r <- chisq.test(CpDm, simulate.p.value = TRUE)
+CpDm
+r
+
+r <- chisq.test(ECpN, simulate.p.value = TRUE)
+ECpN
+r
+
+r <- chisq.test(Etotal, simulate.p.value = TRUE)
+Etotal
+r
+```
+
+### All Dissemination
+
+```{r}
+ependaymal_data <- data[c("Genetic.Mutations", "All.Dissemination")]
+ependaymal_data <- ependaymal_data[nchar(as.character(ependaymal_data$All.Dissemination)) > 0, ]
+
+totalTable <- table(ependaymal_data$All.Dissemination, ependaymal_data$Genetic.Mutations)
+
+totalTable <- totalTable[, c(2, 1)]
+totalTable
+
+EVtotal <- totalTable[3, , drop = FALSE]
+r <- chisq.test(EVtotal, simulate.p.value = TRUE)
+EVtotal
+r
+```
+
+## New method
+
+```{r}
+table_fisher <- matrix(c(4,101,
+                         40,160,
+                         17,67,
+                         57,242), nrow = 2)
+table_fisher
+result_fisher <- fisher.test(table_fisher)
+print(result_fisher)
+```
+
+```{r}
+table_fisher <- matrix(c(0,1,3,3,0,2,10,11), nrow = 2)
+table_fisher
+result_fisher <- fisher.test(table_fisher)
+print(result_fisher)
+```
+
+```{r}
+table_fisher <- matrix(c(1,0,3,3,2,0,5,15), nrow = 2)
+table_fisher
+result_fisher <- fisher.test(table_fisher)
+print(result_fisher)
+```
+
+```{r}
+table_fisher <- matrix(c(1,3,6,34,2,15,21,36), nrow = 2)
+table_fisher
+result_fisher <- fisher.test(table_fisher)
+print(result_fisher)
+```
+
+```{r}
+table_fisher <- matrix(c(0,2,1,8,0,6,4,16), nrow = 2)
+table_fisher
+result_fisher <- fisher.test(table_fisher)
+print(result_fisher)
+```
+
+```{r}
+table_fisher <- matrix(c(1,0,4,4, 4, 2, 10, 8), nrow = 2)
+table_fisher
+result_fisher <- fisher.test(table_fisher)
+print(result_fisher)
+```
+
+```{r}
+table_fisher <- matrix(c(0,1,3,5,2,4,1,17), nrow = 2)
+table_fisher
+result_fisher <- fisher.test(table_fisher)
+print(result_fisher)
+```
+
+```{r}
+table_fisher <- matrix(c(2,2,9,31,6,11,20,37), nrow = 2)
+table_fisher
+result_fisher <- fisher.test(table_fisher)
+print(result_fisher)
+```
+
+```{r}
+table_fisher <- matrix(c(2,2,13,27,6,11,31,26), nrow = 2)
+table_fisher
+result_fisher <- fisher.test(table_fisher)
+print(result_fisher)
+```
+
+```{r}
+table_fisher <- matrix(c(0,1,1,12,0,3,0,12), nrow = 2)
+table_fisher
+result_fisher <- fisher.test(table_fisher)
+print(result_fisher)
+```
+
+```{r}
+table_fisher <- matrix(c(1,0,5,6,1,1,5,3), nrow = 2)
+table_fisher
+result_fisher <- fisher.test(table_fisher)
+print(result_fisher)
+```
+
+```{r}
+table_fisher <- matrix(c(0,1,5,6,1,1,3,5), nrow = 2)
+table_fisher
+result_fisher <- fisher.test(table_fisher)
+print(result_fisher)
+```
+
+```{r}
+table_fisher <- matrix(c(1,3,13,27,3,14,12,45), nrow = 2)
+table_fisher
+result_fisher <- fisher.test(table_fisher)
+print(result_fisher)
+```
+
+```{r}
+table_fisher <- matrix(c(0,1,1,20,0,13,0,18), nrow = 2)
+table_fisher
+result_fisher <- fisher.test(table_fisher)
+print(result_fisher)
+```
+
+```{r}
+table_fisher <- matrix(c(0,0,12,4,8,3,12,1), nrow = 2)
+table_fisher
+result_fisher <- fisher.test(table_fisher)
+print(result_fisher)
+```
+
+```{r}
+table_fisher <- matrix(c(0,0,3,13,3,8,1,12), nrow = 2)
+table_fisher
+result_fisher <- fisher.test(table_fisher)
+print(result_fisher)
+```
+
+```{r}
+table_fisher <- matrix(c(1,3,
+                         21,19,
+                         13,4,
+                         18,39), nrow = 2)
+table_fisher
+result_fisher <- fisher.test(table_fisher)
+print(result_fisher)
+```
+
+```{r}
+table_fisher <- matrix(c(0,2,
+                         2,29,
+                         0,13,
+                         0,29), nrow = 2)
+table_fisher
+result_fisher <- fisher.test(table_fisher)
+print(result_fisher)
+```
+
+```{r}
+table_fisher <- matrix(c(1,0,
+                         16,8,
+                         8,3,
+                         17,4), nrow = 2)
+table_fisher
+result_fisher <- fisher.test(table_fisher)
+print(result_fisher)
+```
+
+```{r}
+table_fisher <- matrix(c(0,1,
+                         6,18,
+                         3,8,
+                         4,17), nrow = 2)
+table_fisher
+result_fisher <- fisher.test(table_fisher)
+print(result_fisher)
+```
+
+```{r}
+table_fisher <- matrix(c(2,2,
+                         31,9,
+                         13,4,
+                         29,28), nrow = 2)
+table_fisher
+result_fisher <- fisher.test(table_fisher)
+print(result_fisher)
+```
+
+```{r}
+table_fisher <- matrix(c(1,2,
+                         2,1), nrow = 2)
+table_fisher
+result_fisher <- fisher.test(table_fisher)
+print(result_fisher)
+```
+
+```{r}
+table_fisher <- matrix(c(2,1,
+                         1,2), nrow = 2)
+table_fisher
+result_fisher <- fisher.test(table_fisher)
+print(result_fisher)
+```
+
+```{r}
+table_fisher <- matrix(c(3,8,
+                         3,22), nrow = 2)
+table_fisher
+result_fisher <- fisher.test(table_fisher)
+print(result_fisher)
+```
+
+```{r}
+table_fisher <- matrix(c(1,1,
+                         0,7), nrow = 2)
+table_fisher
+result_fisher <- fisher.test(table_fisher)
+print(result_fisher)
+```
+
+```{r}
+table_fisher <- matrix(c(0,2,
+                         4,2), nrow = 2)
+table_fisher
+result_fisher <- fisher.test(table_fisher)
+print(result_fisher)
+```
+
+```{r}
+table_fisher <- matrix(c(1,1,
+                         2,4), nrow = 2)
+table_fisher
+result_fisher <- fisher.test(table_fisher)
+print(result_fisher)
+```
+
+```{r}
+table_fisher <- matrix(c(2,9,
+                         7,18), nrow = 2)
+table_fisher
+result_fisher <- fisher.test(table_fisher)
+print(result_fisher)
+```
+
+```{r}
+table_fisher <- matrix(c(5,6,
+                         8,17), nrow = 2)
+table_fisher
+result_fisher <- fisher.test(table_fisher)
+print(result_fisher)
+```
+
+```{r}
+table_fisher <- matrix(c(0,6,
+                         1,6), nrow = 2)
+table_fisher
+result_fisher <- fisher.test(table_fisher)
+print(result_fisher)
+```
+
+```{r}
+table_fisher <- matrix(c(2,2,
+                         3,4), nrow = 2)
+table_fisher
+result_fisher <- fisher.test(table_fisher)
+print(result_fisher)
+```
+
+```{r}
+table_fisher <- matrix(c(6,5,
+                         7,18), nrow = 2)
+table_fisher
+result_fisher <- fisher.test(table_fisher)
+print(result_fisher)
+```
+
+```{r}
+table_fisher <- matrix(c(0,4,
+                         1,8), nrow = 2)
+table_fisher
+result_fisher <- fisher.test(table_fisher)
+print(result_fisher)
+```
+
+```{r}
+table_fisher <- matrix(c(3,1,
+                         7,2), nrow = 2)
+table_fisher
+result_fisher <- fisher.test(table_fisher)
+print(result_fisher)
+```
+
+```{r}
+table_fisher <- matrix(c(1,3,
+                         1,8), nrow = 2)
+table_fisher
+result_fisher <- fisher.test(table_fisher)
+print(result_fisher)
+```
+
+```{r}
+table_fisher <- matrix(c(4,7,
+                         13,12), nrow = 2)
+table_fisher
+result_fisher <- fisher.test(table_fisher)
+print(result_fisher)
+```
+
+```{r}
+table_fisher <- matrix(c(0,8,
+                         2,17), nrow = 2)
+table_fisher
+result_fisher <- fisher.test(table_fisher)
+print(result_fisher)
+```
+
+```{r}
+table_fisher <- matrix(c(4,2,
+                         10,5), nrow = 2)
+table_fisher
+result_fisher <- fisher.test(table_fisher)
+print(result_fisher)
+```
+
+```{r}
+table_fisher <- matrix(c(2,4,
+                         3,12), nrow = 2)
+table_fisher
+result_fisher <- fisher.test(table_fisher)
+print(result_fisher)
+```
+
+```{r}
+table_fisher <- matrix(c(8,3,
+                         19,6), nrow = 2)
+table_fisher
+result_fisher <- fisher.test(table_fisher)
+print(result_fisher)
+```
+
+```{r}
+table_fisher <- matrix(c(11,44,
+                         25,103), nrow = 2)
+table_fisher
+result_fisher <- fisher.test(table_fisher)
+print(result_fisher)
+```

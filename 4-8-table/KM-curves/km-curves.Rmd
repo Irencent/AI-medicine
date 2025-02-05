@@ -1,0 +1,282 @@
+---
+title: "km-curve"
+output: html_document
+date: "2024-04-17"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}
+summary(cars)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+```{r}
+library(survminer)
+library(survival)
+library(ggplot2)
+df <- read.csv("./km-curve-files/km-curve-1.csv")
+colnames(df)
+```
+
+# 1
+
+```{r}
+df <- read.csv("./km-curve-files/km-curve-1.csv")
+#df$Genetic.Mutations <- factor(df$Genetic.Mutations, levels = c("", ""))
+surv.object<-Surv(df$OS.impute..months., df$Survival.Status)
+
+km=survfit(formula=surv.object ~ Genetic.Mutations,data = df)
+#tiff("./km-curve-tiff/km-curve-1.tiff", width=17.75, height=17.75, units="cm", res=300)
+pdf("./km-curve-pdf/km-curve-1.pdf", width=7, height=7)
+ggsurvplot(km,break.time.by = 12,xlim = c(0,60),risk.table = TRUE, pval=TRUE, pval.method = TRUE, palette= c('#4F95DB', '#DB2F36','#D6B709', '#187D2A'),legend=c(0.8,0.2), legend.labs=c('TP53-', 'TP53+'))
+dev.off()
+```
+
+# 2
+
+```{r}
+df <- read.csv("./km-curve-files/km-curve-2.csv")
+#df$Genetic.Mutations <- factor(df$Genetic.Mutations, levels = c("", ""))
+surv.object<-Surv(df$OS.impute..months., df$Survival.Status)
+
+km=survfit(formula=surv.object ~ Genetic.Mutations,data = df)
+#tiff("./km-curve-tiff/km-curve-2.tiff", width=17.75, height=17.75, units="cm", res=300)
+pdf("./km-curve-pdf/km-curve-2.pdf", width=7, height=7)
+ggsurvplot(km,break.time.by = 12,xlim = c(0,60),risk.table = TRUE, pval=TRUE, pval.method = TRUE, palette= c('#4F95DB', '#DB2F36','#D6B709', '#187D2A'),legend=c(0.8,0.2),legend.labs=c('TP53-', 'TP53+'))
+dev.off()
+```
+
+# 3
+
+```{r}
+df <- read.csv("./km-curve-files/km-curve-3.csv")
+#df$Genetic.Mutations <- factor(df$Genetic.Mutations, levels = c("", ""))
+surv.object<-Surv(df$OS.impute..months., df$Survival.Status)
+
+km=survfit(formula=surv.object ~ Histological.Subtypes,data = df)
+#tiff("./km-curve-tiff/km-curve-3.tiff", width=17.75, height=17.75, units="cm", res=300)
+pdf("./km-curve-pdf/km-curve-3.pdf", width=7, height=7)
+ggsurvplot(km,break.time.by = 12,xlim = c(0,60),risk.table = TRUE, pval=TRUE, pval.method = TRUE, palette= c('#4F95DB', '#DB2F36','#D6B709', '#187D2A'),legend=c(0.8,0.2),legend.labs=c('Classic','DN','LCA','MBEN'))
+dev.off()
+```
+
+# 4
+
+```{r}
+df <- read.csv("./km-curve-files/km-curve-4.csv")
+#df$Genetic.Mutations <- factor(df$Genetic.Mutations, levels = c("", ""))
+surv.object<-Surv(df$OS.impute..months., df$Survival.Status)
+
+km=survfit(formula=surv.object ~ TumorResection,data = df)
+#tiff("./km-curve-tiff/km-curve-4.tiff", width=17.75, height=17.75, units="cm", res=300)
+pdf("./km-curve-pdf/km-curve-4.pdf", width=7, height=7)
+ggsurvplot(km,break.time.by = 12,xlim = c(0,60),risk.table = TRUE, pval=TRUE, pval.method = TRUE, palette= c('#4F95DB', '#DB2F36','#D6B709', '#187D2A'),legend=c(0.8,0.2), legend.labs=c('GTR','NTR','STR'))
+dev.off()
+```
+
+# 5
+
+```{r}
+df <- read.csv("./km-curve-files/km-curve-5.csv")
+#df$Genetic.Mutations <- factor(df$Genetic.Mutations, levels = c("", ""))
+surv.object<-Surv(df$OS.impute..months., df$Survival.Status)
+
+km=survfit(formula=surv.object ~ TumorResection,data = df)
+#tiff("./km-curve-tiff/km-curve-5.tiff", width=17.75, height=17.75, units="cm", res=300)
+pdf("./km-curve-pdf/km-curve-5.pdf", width=7, height=7)
+ggsurvplot(km,break.time.by = 12,xlim = c(0,60),risk.table = TRUE, pval=TRUE, pval.method = TRUE, palette= c('#4F95DB', '#DB2F36','#D6B709', '#187D2A'),legend=c(0.8,0.2),legend.labs=c('GTR','NTR','STR'))
+dev.off()
+```
+
+# 6
+
+```{r}
+df <- read.csv("./km-curve-files/km-curve-6.csv")
+#df$Genetic.Mutations <- factor(df$Genetic.Mutations, levels = c("", ""))
+surv.object<-Surv(df$OS.impute..months., df$Survival.Status)
+
+km=survfit(formula=surv.object ~ TumorResection,data = df)
+#tiff("./km-curve-tiff/km-curve-6.tiff", width=17.75, height=17.75, units="cm", res=300)
+pdf("./km-curve-pdf/km-curve-6.pdf", width=7, height=7)
+ggsurvplot(km,break.time.by = 12,xlim = c(0,60),risk.table = TRUE, pval=TRUE, pval.method = TRUE, palette= c('#4F95DB', '#DB2F36','#D6B709', '#187D2A'),legend=c(0.8,0.2),legend.labs=c('GTR','NTR','STR'))
+dev.off()
+```
+
+# 7
+
+```{r}
+df <- read.csv("./km-curve-files/km-curve-7.csv")
+#df$Genetic.Mutations <- factor(df$Genetic.Mutations, levels = c("", ""))
+surv.object<-Surv(df$OS.impute..months., df$Survival.Status)
+
+km=survfit(formula=surv.object ~ TumorResection,data = df)
+#tiff("./km-curve-tiff/km-curve-7.tiff", width=17.75, height=17.75, units="cm", res=300)
+pdf("./km-curve-pdf/km-curve-7.pdf", width=7, height=7)
+ggsurvplot(km,break.time.by = 12,xlim = c(0,60),risk.table = TRUE, pval=TRUE, pval.method = TRUE, palette= c('#4F95DB', '#DB2F36','#D6B709', '#187D2A'),legend=c(0.8,0.2),legend.labs=c('GTR','NTR','STR'))
+dev.off()
+```
+
+# 8
+
+```{r}
+df <- read.csv("./km-curve-files/km-curve-8.csv")
+#df$Genetic.Mutations <- factor(df$Genetic.Mutations, levels = c("", ""))
+surv.object<-Surv(df$OS.impute..months., df$Survival.Status)
+
+km=survfit(formula=surv.object ~ TumorResection,data = df)
+#tiff("./km-curve-tiff/km-curve-8.tiff", width=17.75, height=17.75, units="cm", res=300)
+pdf("./km-curve-pdf/km-curve-8.pdf", width=7, height=7)
+ggsurvplot(km,break.time.by = 12,xlim = c(0,60),risk.table = TRUE, pval=TRUE, pval.method = TRUE, palette= c('#4F95DB', '#DB2F36','#D6B709', '#187D2A'),legend=c(0.8,0.2),legend.labs=c('GTR','NTR','STR'))
+dev.off()
+```
+
+# 9
+
+```{r}
+df <- read.csv("./km-curve-files/km-curve-9.csv")
+df$Radiotherapy <- factor(df$Radiotherapy, levels = c("Y", "N"))
+surv.object<-Surv(df$OS.impute..months., df$Survival.Status)
+
+km=survfit(formula=surv.object ~ Radiotherapy,data = df)
+#tiff("./km-curve-tiff/km-curve-9.tiff", width=17.75, height=17.75, units="cm", res=300)
+pdf("./km-curve-pdf/km-curve-9.pdf", width=7, height=7)
+ggsurvplot(km,break.time.by = 12,xlim = c(0,60),risk.table = TRUE, pval=TRUE, pval.method = TRUE, palette= c( '#4F95DB','#DB2F36','#D6B709', '#187D2A'),legend=c(0.8,0.2),legend.labs=c('Y','N'))
+dev.off()
+```
+
+# 10
+
+```{r}
+df <- read.csv("./km-curve-files/km-curve-10.csv")
+df$Radiotherapy <- factor(df$Radiotherapy, levels = c("Y", "N"))
+surv.object<-Surv(df$OS.impute..months., df$Survival.Status)
+
+km=survfit(formula=surv.object ~ Radiotherapy,data = df)
+#tiff("./km-curve-tiff/km-curve-10.tiff", width=17.75, height=17.75, units="cm", res=300)
+pdf("./km-curve-pdf/km-curve-10.pdf", width=7, height=7)
+ggsurvplot(km,break.time.by = 12,xlim = c(0,60),risk.table = TRUE, pval=TRUE, pval.method = TRUE, palette= c('#4F95DB', '#DB2F36','#D6B709', '#187D2A'),legend=c(0.8,0.2),legend.labs=c('Y','N'))
+dev.off()
+```
+
+# 11
+
+```{r}
+df <- read.csv("./km-curve-files/km-curve-11.csv")
+df$Radiotherapy <- factor(df$Radiotherapy, levels = c("Y", "N"))
+surv.object<-Surv(df$OS.impute..months., df$Survival.Status)
+
+km=survfit(formula=surv.object ~ Radiotherapy,data = df)
+#tiff("./km-curve-tiff/km-curve-11.tiff", width=17.75, height=17.75, units="cm", res=300)
+pdf("./km-curve-pdf/km-curve-11.pdf", width=7, height=7)
+ggsurvplot(km,break.time.by = 12,xlim = c(0,60),risk.table = TRUE, pval=TRUE, pval.method = TRUE, palette= c('#4F95DB', '#DB2F36','#D6B709', '#187D2A'),legend=c(0.8,0.2),legend.labs=c('Y','N'))
+dev.off()
+```
+
+# 12
+
+```{r}
+df <- read.csv("./km-curve-files/km-curve-12.csv")
+df$Chemotherapy <- factor(df$Chemotherapy, levels = c("Y", "N"))
+surv.object<-Surv(df$OS.impute..months., df$Survival.Status)
+
+km=survfit(formula=surv.object ~ Chemotherapy,data = df)
+#tiff("./km-curve-tiff/km-curve-12.tiff", width=17.75, height=17.75, units="cm", res=300)
+pdf("./km-curve-pdf/km-curve-12.pdf", width=7, height=7)
+ggsurvplot(km,break.time.by = 12,xlim = c(0,60),risk.table = TRUE, pval=TRUE, pval.method = TRUE, palette= c('#4F95DB', '#DB2F36','#D6B709', '#187D2A'),legend=c(0.8,0.2),legend.labs=c('Y','N'))
+dev.off()
+```
+
+# 13
+
+```{r}
+df <- read.csv("./km-curve-files/km-curve-13.csv")
+df$Chemotherapy <- factor(df$Chemotherapy, levels = c("Y", "N"))
+surv.object<-Surv(df$OS.impute..months., df$Survival.Status)
+
+km=survfit(formula=surv.object ~ Chemotherapy,data = df)
+#tiff("./km-curve-tiff/km-curve-13.tiff", width=17.75, height=17.75, units="cm", res=300)
+pdf("./km-curve-pdf/km-curve-13.pdf", width=7, height=7)
+ggsurvplot(km,break.time.by = 12,xlim = c(0,60),risk.table = TRUE, pval=TRUE, pval.method = TRUE, palette= c('#4F95DB', '#DB2F36','#D6B709', '#187D2A'),legend=c(0.8,0.2),legend.labs=c('Y','N'))
+dev.off()
+```
+
+# 14
+
+```{r}
+df <- read.csv("./km-curve-files/km-curve-14.csv")
+df$Chemotherapy <- factor(df$Chemotherapy, levels = c("Y", "N"))
+surv.object<-Surv(df$OS.impute..months., df$Survival.Status)
+
+km=survfit(formula=surv.object ~ Chemotherapy,data = df)
+#tiff("./km-curve-tiff/km-curve-14.tiff", width=17.75, height=17.75, units="cm", res=300)
+pdf("./km-curve-pdf/km-curve-14.pdf", width=7, height=7)
+ggsurvplot(km,break.time.by = 12,xlim = c(0,60),risk.table = TRUE, pval=TRUE, pval.method = TRUE, palette= c('#4F95DB', '#DB2F36','#D6B709', '#187D2A'),legend=c(0.8,0.2),legend.labs=c('Y','N'))
+dev.off()
+```
+
+```{r}
+df <- read.csv("../overall.csv")
+surv.object<-Surv(df$OS.impute..months., df$Survival.Status)
+
+km=survfit(formula=surv.object ~ 1,data = df)
+#tiff("./km-curve-tiff/km-curve-14.tiff", width=17.75, height=17.75, units="cm", res=300)
+pdf("./km-curve-pdf/overall.pdf", width=7, height=7)
+ggsurvplot(km,break.time.by = 12,xlim = c(0,60),risk.table = TRUE, pval=TRUE, pval.method = TRUE, palette= c('#4F95DB'),legend=c(0.8,0.2),legend.labs=c('Overall'))
+dev.off()
+```
+
+```{r}
+df <- read.csv("/Users/huyanshen/Desktop/4-8-table/four-types.csv")
+colnames(df)
+df$Molecular.Subtypes <- factor(df$Molecular.Subtypes, levels = c("WNT", "SHH", "G3", "G4"))
+surv.object<-Surv(df$OS.impute..months., df$Survival.Status)
+
+km=survfit(formula=surv.object ~ Molecular.Subtypes,data = df)
+
+#tiff("./km-curve-tiff/four-types.tiff", width=17.75, height=17.75, units="cm", res=300)
+pdf("./km-curve-pdf/Molecular subgroup.pdf", width=7, height=7)
+ggsurvplot(km,break.time.by = 12,xlim = c(0,60),risk.table = TRUE, pval=TRUE, pval.method = TRUE, palette= c('#4F95DB', '#DB2F36','#D6B709', '#187D2A'),legend=c(0.8,0.2),legend.labs=c("WNT", "SHH", "G3", "G4"))
+dev.off()
+```
+
+```{r}
+df <- read.csv("/Users/huyanshen/Desktop/4-8-table/AsiaVsUs-shh.csv")
+surv.object<-Surv(df$OS.impute..months., df$Survival.Status)
+help("ggsurvplot")
+
+km=survfit(formula=surv.object ~ Geographical.Location,data = df)
+
+pdf("./km-curve-pdf/Geographic location of therapy.pdf", width=7, height=7)
+ggsurvplot(km,break.time.by = 12,xlim = c(0,60),risk.table = TRUE,pval=TRUE, pval.method = TRUE, palette= c('#DB2F36','#4F95DB'),legend=c(0.8,0.2),legend.labs=c("East Asia", "North America"))
+dev.off()
+```
+
+```{r}
+df <- read.csv("/Users/huyanshen/Desktop/4-8-table/g3g4.csv")
+surv.object<-Surv(df$OS.impute..months., df$Survival.Status)
+help("ggsurvplot")
+
+km=survfit(formula=surv.object ~ Molecular.Subtypes,data = df)
+
+pdf("./km-curve-pdf/g3g4.pdf", width=7, height=7)
+ggsurvplot(km,break.time.by = 12,xlim = c(0,60),risk.table = TRUE,pval=TRUE, pval.method = TRUE, palette= c('#D6B709', '#187D2A'),legend=c(0.8,0.2),legend.labs=c("G3", "G4"))
+dev.off()
+```

@@ -1,0 +1,14 @@
+I:\图像\RENJI\MI\急性\3448687_tayier¤aihemaiti
+这个数据名称里有特殊字符 "?" "¤"
+
+
+I:\图像\RENJI\MI\慢性(含部分未分类亚急性）\1907787_wangaibao
+这个数据 Patient ID 中有三个 $$$
+
+
+I:\图像\RENJI\MI\急性\2004300_jiangrenzhen
+这个数据 Patient ID 中有三个 $$$
+
+
+I:\图像\RENJI\DCM\20150319 zhengying
+这个数据里没有患者姓名
